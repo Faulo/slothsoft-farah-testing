@@ -1,0 +1,27 @@
+{
+	"name" : "slothsoft/farah-testing",
+	"require" : {
+		"php" : ">=7.4",
+		"slothsoft/farah" : "^1.1"
+	},
+	"require-dev" : {
+		"symfony/panther" : "*",
+		"dbrekelmans/bdi" : "*",
+		"phpunit/phpunit" : "~9.6.23"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Slothsoft\\FarahTesting\\" : "src/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"Slothsoft\\FarahTesting\\" : "tests/"
+		}
+	},
+	"authors" : [{
+			"name" : "Daniel Schulz",
+			"email" : "faulolio@gmail.com"
+		}
+	]
+}

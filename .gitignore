@@ -1,0 +1,22 @@
+# == Windows ==
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# == Composer ==
+/composer.phar
+/composer.lock
+/vendor/
+
+# == phpDocumentor ==
+/docs/
+
+# == PHPUnit ==
+/.phpunit.result.cache
+
+# == Slothsoft ==
+/.farah-cache/
+/.farah-data/
+/.farah-log/
+*.local
