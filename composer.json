@@ -2,6 +2,7 @@
 	"name" : "slothsoft/farah-testing",
 	"require" : {
 		"php" : ">=7.4",
+		"slothsoft/core" : "^1.13.16",
 		"slothsoft/farah" : "^1.21.28"
 	},
 	"require-dev" : {
