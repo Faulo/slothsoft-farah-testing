@@ -76,6 +76,6 @@ class FarahServer {
             }
         }
         
-        throw new RuntimeException(sprintf('Failed to find valid browser driver. Drivers available are: [%s]', implode(FileSystem::scanDir($driversDirectory))));
+        throw new RuntimeException(sprintf('Failed to find a valid browser driver. Drivers available are: [%s]', implode(', ', FileSystem::scanDir($driversDirectory))));
     }
 }
