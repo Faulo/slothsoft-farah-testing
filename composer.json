@@ -2,7 +2,7 @@
 	"name" : "slothsoft/farah-testing",
 	"require" : {
 		"php" : ">=7.4",
-		"slothsoft/farah" : "^1.1"
+		"slothsoft/farah" : "^1.21.28"
 	},
 	"require-dev" : {
 		"symfony/panther" : "^1.1.2",
