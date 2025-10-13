@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<assets xmlns="http://schema.slothsoft.net/farah/module" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1">
+	<use-document name="php-info" ref="//slothsoft@farah/phpinfo" />
+</assets>
