@@ -19,6 +19,8 @@ def runTests(def versions) {
 						sh 'wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null'
 						sh 'echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null'
 						sh 'apt update && apt install firefox -y'
+					} else {
+						bat 'choco install firefox -y'
 					}
 
 					callShell 'composer update --prefer-lowest'

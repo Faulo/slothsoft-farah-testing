@@ -70,6 +70,10 @@ class FarahServer {
                 return Client::createFirefoxClient($driversFile, null, $options, $this->uri);
             }
             
+            if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . 'geckodriver')) {
+                return Client::createFirefoxClient($driversFile, null, $options, $this->uri);
+            }
+            
             $command = sprintf('composer exec bdi detect %s', escapeshellarg($driversDirectory));
             if (CLI::execute($command) !== 0) {
                 break;
