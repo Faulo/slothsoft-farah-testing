@@ -20,7 +20,7 @@ def runTests(def versions) {
 						sh 'echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null'
 						sh 'apt update && apt install firefox -y'
 					} else {
-						bat 'choco install firefox --yes --install-arguments="/MaintenanceService=false /RegisterDefaultAgent=false"'
+						bat 'choco install googlechrome --yes'
 					}
 
 					callShell 'composer update --prefer-lowest'

@@ -59,6 +59,16 @@ class FarahServer {
         $this->manager->quit();
     }
     
+    private static array $firefoxExecutables = [
+        'geckodriver.exe',
+        'geckodriver'
+    ];
+    
+    private static array $chromeExecutables = [
+        'chromedriver.exe',
+        'chromedriver'
+    ];
+    
     public function createClient(): Client {
         $driversDirectory = ServerEnvironment::getCacheDirectory() . DIRECTORY_SEPARATOR . 'bdi-drivers';
         
@@ -66,12 +76,16 @@ class FarahServer {
         $options['port'] = self::findFreePort();
         
         for ($i = 0; $i < 2; $i ++) {
-            if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . 'geckodriver.exe')) {
-                return Client::createFirefoxClient($driversFile, null, $options, $this->uri);
+            foreach (self::$firefoxExecutables as $executable) {
+                if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
+                    return Client::createFirefoxClient($driversFile, null, $options, $this->uri);
+                }
             }
             
-            if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . 'geckodriver')) {
-                return Client::createFirefoxClient($driversFile, null, $options, $this->uri);
+            foreach (self::$chromeExecutables as $executable) {
+                if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
+                    return Client::createChromeClient($driversFile, null, $options, $this->uri);
+                }
             }
             
             $command = sprintf('composer exec bdi detect %s', escapeshellarg($driversDirectory));
