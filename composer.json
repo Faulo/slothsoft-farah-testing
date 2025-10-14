@@ -3,9 +3,7 @@
 	"require" : {
 		"php" : ">=7.4",
 		"slothsoft/core" : "^1.13.16",
-		"slothsoft/farah" : "^1.21.28"
-	},
-	"require-dev" : {
+		"slothsoft/farah" : "^1.21.28",
 		"symfony/panther" : "^1.1.2",
 		"dbrekelmans/bdi" : "^1.2.0",
 		"phpunit/phpunit" : "~9.6.23"
@@ -24,5 +22,8 @@
 			"name" : "Daniel Schulz",
 			"email" : "faulolio@gmail.com"
 		}
+	],
+	"keywords" : [
+		"testing"
 	]
 }

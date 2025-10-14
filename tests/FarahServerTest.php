@@ -11,6 +11,16 @@ use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
 class FarahServerTest extends TestCase {
     
+    private static int $reporting;
+    
+    public static function setUpBeforeClass(): void {
+        self::$reporting = error_reporting(E_ERROR | E_WARNING | E_PARSE);
+    }
+    
+    public static function tearDownAfterClass(): void {
+        error_reporting(self::$reporting);
+    }
+    
     public function test_start() {
         $sut = new FarahServer();
         $sut->start();
