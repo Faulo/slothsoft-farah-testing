@@ -13,6 +13,12 @@ def runTests(def versions) {
 
 			withDockerContainer(image: image, toolName: 'Default') {
 				catchError(stageResult: 'UNSTABLE', buildResult: 'UNSTABLE', catchInterruptions: false) {
+					callShell 'install -d -m 0755 /etc/apt/keyrings'
+					callShell 'apt update && apt install wget -y'
+					callShell 'wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null'
+					callShell 'echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null'
+					callShell 'apt update && apt install firefox -y'
+					
 					callShell 'composer update --prefer-lowest'
 					callShell "composer exec phpunit -- --log-junit .reports/${version}.xml"
 				}
