@@ -20,7 +20,7 @@ def runTests(def versions) {
 						sh 'echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null'
 						sh 'apt update && apt install firefox -y'
 					} else {
-						bat 'choco install firefox -y'
+						bat 'choco install firefox --yes --install-arguments="/NoTaskbarShortcut /NoDesktopShortcut /NoStartMenuShortcut /NoMaintenanceService /NoAutoUpdate"'
 					}
 
 					callShell 'composer update --prefer-lowest'
@@ -61,7 +61,7 @@ pipeline {
 			}
 			steps {
 				script {
-					// runTests(["7.4", "8.0", "8.1", "8.2", "8.3"])
+					runTests(["7.4", "8.0", "8.1", "8.2", "8.3"])
 				}
 			}
 		}
