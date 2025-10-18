@@ -74,6 +74,7 @@ class FarahServer {
         
         $options = [];
         $options['port'] = self::findFreePort();
+        $options['request_timeout_in_ms'] = 300_000;
         
         for ($i = 0; $i < 2; $i ++) {
             foreach (self::$firefoxExecutables as $executable) {
