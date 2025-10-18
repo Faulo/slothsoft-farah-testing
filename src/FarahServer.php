@@ -2,14 +2,14 @@
 declare(strict_types = 1);
 namespace Slothsoft\FarahTesting;
 
-use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\ProcessManager\WebServerManager;
+use Slothsoft\Core\CLI;
+use Slothsoft\Core\FileSystem;
+use Slothsoft\Core\ServerEnvironment;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
-use Slothsoft\Core\ServerEnvironment;
-use Slothsoft\Core\FileSystem;
+use Symfony\Component\Panther\Client;
+use Symfony\Component\Panther\ProcessManager\WebServerManager;
 use RuntimeException;
-use Slothsoft\Core\CLI;
 
 class FarahServer {
     
@@ -43,7 +43,7 @@ class FarahServer {
     
     public function start(): void {
         $documentRoot = realpath(__DIR__ . '/../server');
-        $hostname = 'localhost';
+        $hostname = '127.0.0.1';
         $port = self::findFreePort();
         $router = '';
         $readinessPath = '';

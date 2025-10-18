@@ -9,6 +9,11 @@ use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
+/**
+ * FarahServerTest
+ *
+ * @see FarahServer
+ */
 class FarahServerTest extends TestCase {
     
     private static int $reporting;
