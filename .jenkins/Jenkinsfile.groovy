@@ -1,13 +1,12 @@
 def runTests(def versions) {
 	for (version in versions) {
 		def image = "faulo/farah:${version}"
+		def dockerTool = tool(type: 'dockerTool', name: 'Default') + "/bin/docker"
 
 		stage("PHP: ${version}") {
 			dir('.reports') {
 				deleteDir()
 			}
-
-			def dockerTool = tool(type: 'dockerTool', name: 'Default') + "/bin/docker"
 
 			callShell "${dockerTool} pull ${image}"
 
