@@ -4,9 +4,9 @@ namespace Slothsoft\FarahTesting\Constraints;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\DOMHelper;
+use DOMDocument;
 
 /**
  * DOMNodeEqualToTest

@@ -2,7 +2,10 @@
 declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Constraints;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\Constraint\Constraint;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\ScalarComparator;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use DOMNode;
@@ -19,17 +22,29 @@ final class DOMNodeEqualTo extends Constraint {
     }
     
     public function toString(): string {
-        return 'is XML-equal to expected DOMNode';
+        return 'is XML-equal to the expected node';
     }
     
-    protected function matches($other): bool {
-        if (! $other instanceof DOMNode) {
-            return false;
+    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
+        if ($this->expected === $other) {
+            return true;
         }
         
-        $otherText = self::stringify($other);
+        try {
+            $otherText = $other instanceof DOMNode ? self::stringify($other) : '';
+            
+            $comparator = new ScalarComparator();
+            
+            $comparator->assertEquals($this->expectedText, $otherText);
+        } catch (ComparisonFailure $f) {
+            if ($returnResult) {
+                return false;
+            }
+            
+            throw new ExpectationFailedException(trim($description . "\n" . sprintf('Failed asserting that %s.%s%s', $this->failureDescription($other), "\n", $this->additionalFailureDescription($other))), $f);
+        }
         
-        return $this->expectedText === $otherText;
+        return true;
     }
     
     protected function failureDescription($other): string {
