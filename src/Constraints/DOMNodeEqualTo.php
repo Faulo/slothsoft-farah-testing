@@ -43,7 +43,16 @@ final class DOMNodeEqualTo extends Constraint {
         return null;
     }
     
-    private function createComparison($other, string $otherText): ComparisonFailure {
+    private function createComparison($other, string $otherText): object {
+        foreach ([
+            'PHPUnitPHAR\SebastianBergmann\Comparator\ComparisonFailure',
+            'SebastianBergmann\Comparator\ComparisonFailure'
+        ] as $className) {
+            if (class_exists($className)) {
+                return new $className($this->expected, $other, $this->expectedText, $otherText);
+            }
+        }
+        
         return new ComparisonFailure($this->expected, $other, $this->expectedText, $otherText);
     }
     
