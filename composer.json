@@ -10,8 +10,8 @@
 	"type" : "library",
 	"require" : {
 		"php" : ">=7.4",
-		"slothsoft/core" : "^1.13.19",
-		"slothsoft/farah" : "^1.21.28",
+		"slothsoft/core" : "^1.14.0",
+		"slothsoft/farah" : "^1.23.0",
 		"symfony/panther" : "^1.1.2",
 		"dbrekelmans/bdi" : "^1.2.0",
 		"phpunit/phpunit" : "~9.6.23"
