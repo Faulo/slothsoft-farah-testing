@@ -69,6 +69,19 @@ class FarahServer {
         'chromedriver'
     ];
     
+    private static array $chromeArguments = [
+        '--headless=new',
+        '--window-size=1200,1100',
+        '--disable-gpu',
+        '--no-zygote',
+        '--disable-dev-shm-usage',
+        '--disable-background-networking',
+        '--disable-extensions',
+        '--no-first-run',
+        '--no-default-browser-check',
+        '--remote-allow-origins=*'
+    ];
+    
     public function createClient(): Client {
         $driversDirectory = ServerEnvironment::getCacheDirectory() . DIRECTORY_SEPARATOR . 'bdi-drivers';
         
@@ -85,7 +98,7 @@ class FarahServer {
             
             foreach (self::$chromeExecutables as $executable) {
                 if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
-                    return Client::createChromeClient($driversFile, null, $options, $this->uri);
+                    return Client::createChromeClient($driversFile, self::$chromeArguments, $options, $this->uri);
                 }
             }
             
