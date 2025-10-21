@@ -59,7 +59,7 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
         
         $errorsText = $this->formatLibxmlErrors($libxmlErrors, $schemaLocation);
         
-        $failure = new ComparisonFailure('XML is valid according to schema', "XML failed schema validation:\n" . $errorsText, 'valid', $errorsText);
+        $failure = new ComparisonFailure('XML is valid according to schema', "XML failed schema validation:\n" . $errorsText, '', $errorsText);
         
         throw new ExpectationFailedException(trim($description . "\n" . sprintf('Failed asserting that %s.', $this->toString())), $failure);
     }
@@ -82,21 +82,21 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
         return null;
     }
     
-    private function formatLibxmlErrors(array $errs, string $schemaLocation): string {
-        if (! $errs) {
+    private function formatLibxmlErrors(array $errors, string $schemaLocation): string {
+        if (! $errors) {
             return 'Unknown validation error (no libxml errors captured).';
         }
         $lines = [
             "Schema: $schemaLocation"
         ];
-        foreach ($errs as $e) {
+        foreach ($errors as $e) {
             $level = [
                 LIBXML_ERR_WARNING => 'Warning',
                 LIBXML_ERR_ERROR => 'Error',
                 LIBXML_ERR_FATAL => 'Fatal'
             ][$e->level] ?? 'Notice';
             
-            $lines[] = sprintf('[%s] %s:%d:%d %s (code %d)', $level, $e->file ?: '(document)', $e->line, $e->column, trim($e->message), $e->code);
+            $lines[] = sprintf('[%s #%d] line %d, column %d: %s', $level, $e->code, $e->line, $e->column, trim($e->message));
         }
         return implode("\n", $lines);
     }
