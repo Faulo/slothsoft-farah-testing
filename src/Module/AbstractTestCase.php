@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
 use Slothsoft\Farah\Schema\SchemaLocator;
 use DOMDocument;
 use Throwable;
@@ -35,16 +36,7 @@ class AbstractTestCase extends TestCase {
     }
     
     protected function assertSchema(DOMDocument $document, string $schema): void {
-        try {
-            // echo PHP_EOL . $schema . PHP_EOL . DOMHelper::loadDocument($schema)->documentURI . PHP_EOL . file_get_contents($schema) . PHP_EOL . PHP_EOL;
-            
-            $validateResult = $document->schemaValidate($schema);
-        } catch (Throwable $e) {
-            $validateResult = false;
-            $this->failException($e);
-        }
-        
-        $this->assertTrue($validateResult, "Slothsoft document '$document->documentURI' did not pass vaidation with '$schema'!");
+        $this->assertThat($document, new DOMDocumentIsValidAccordingToSchema($schema));
     }
 }
 

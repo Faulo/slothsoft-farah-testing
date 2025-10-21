@@ -7,6 +7,7 @@ use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
+use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
@@ -282,23 +283,14 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      * @dataProvider assetLocalUrlProvider
      */
     public function testLocalResultIsValidAccordingToSchema(FarahUrl $url): void {
-        $asset = Module::resolveToAsset($url);
-        $executable = $asset->lookupExecutable();
-        $result = $executable->lookupDefaultResult();
-        $mimeType = $result->lookupMimeType();
+        $mimeType = Module::resolveToResult($url)->lookupMimeType();
         
         if (! MimeTypeDictionary::isXml($mimeType)) {
-            $this->markTestSkipped("Won't attempt to validate non-XML resource '$mimeType'");
+            $this->markTestSkipped("Won't attempt to validate non-XML resource '$url' with mime type '$mimeType'");
             return;
         }
         
-        $document = $result->lookupDOMWriter()->toDocument();
-        
-        if ($schema = $this->findSchemaLocation($document)) {
-            $this->assertSchema($document, $schema);
-        } else {
-            $this->markTestSkipped("Won't attempt to validate resource in unknown namespace '{$document->documentElement->namespaceURI}'");
-        }
+        $this->assertThat($url, new DOMDocumentIsValidAccordingToSchema());
     }
     
     /**
