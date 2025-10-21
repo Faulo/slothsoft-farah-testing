@@ -12,10 +12,10 @@ def runTests(def versions) {
 
 			withDockerContainer(image: image, toolName: 'Default') {
 				catchError(stageResult: 'UNSTABLE', buildResult: 'UNSTABLE', catchInterruptions: false) {
-					callShell 'composer update --prefer-stable'
-					callShell "composer exec phpunit -- --log-junit .reports/${version}-stable.xml"
 					callShell 'composer update --prefer-lowest'
 					callShell "composer exec phpunit -- --log-junit .reports/${version}-lowest.xml"
+					callShell 'composer update --prefer-stable'
+					callShell "composer exec phpunit -- --log-junit .reports/${version}-stable.xml"
 				}
 			}
 
