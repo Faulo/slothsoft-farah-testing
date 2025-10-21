@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\StringContains;
 use Slothsoft\Core\DOMHelper;
+use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 
@@ -59,13 +60,17 @@ class FarahServerTest extends TestCase {
         $sut = new FarahServer();
         $sut->start();
         
-        $client = $sut->createClient();
-        $client->request('GET', '/slothsoft@farah/phpinfo');
-        
-        $actual = $client->executeScript(<<<EOT
+        try {
+            $client = $sut->createClient();
+            $client->request('GET', '/slothsoft@farah/phpinfo');
+            
+            $actual = $client->executeScript(<<<EOT
 return document.querySelector("h1").innerHTML;
 EOT);
-        
-        $this->assertThat($actual, new StringContains(PHP_VERSION));
+            
+            $this->assertThat($actual, new StringContains(PHP_VERSION));
+        } catch (BrowserDriverNotFoundException $e) {
+            $this->markTestSkipped();
+        }
     }
 }

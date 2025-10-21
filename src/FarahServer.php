@@ -5,11 +5,11 @@ namespace Slothsoft\FarahTesting;
 use Slothsoft\Core\CLI;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
+use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\ProcessManager\WebServerManager;
-use RuntimeException;
 
 class FarahServer {
     
@@ -94,7 +94,10 @@ class FarahServer {
             }
         }
         
-        throw new RuntimeException(sprintf('Failed to find a valid browser driver. Drivers available are: [%s]', implode(', ', FileSystem::scanDir($driversDirectory))));
+        throw BrowserDriverNotFoundException::forDirectory($driversDirectory, [
+            ...self::$firefoxExecutables,
+            ...self::$chromeExecutables
+        ], FileSystem::scanDir($driversDirectory));
     }
     
     private function detectDrivers(string $driversDirectory): bool {
