@@ -107,6 +107,7 @@ class FarahServer {
             $rootDirectory .= DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..';
             if ($executable = realpath($rootDirectory . $executableDirectory)) {
                 $command = sprintf('%s %s detect %s', escapeshellarg(PHP_BINARY), escapeshellarg($executable), escapeshellarg($driversDirectory));
+                var_dump([$command => CLI::execute($command)]);
                 return CLI::execute($command) === 0;
             }
         }
