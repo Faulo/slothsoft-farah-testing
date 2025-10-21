@@ -119,6 +119,11 @@ EOT
         self::assertThat($actualDoc, $sut);
     }
     
+    public function test_diff() {
+        $dom = new DOMHelper();
+        $this->assertThat($dom->parse('<data/>'), new DOMNodeEqualTo($dom->parse('<data/>')));
+    }
+    
     public static function provideXmlComparisons(): iterable {
         yield 'identical simple element' => [
             '<data a="b"/>',

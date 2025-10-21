@@ -2,10 +2,8 @@
 declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Constraints;
 
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\Constraint\Constraint;
 use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\Comparator\ScalarComparator;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use DOMNode;
@@ -30,21 +28,23 @@ final class DOMNodeEqualTo extends Constraint {
             return true;
         }
         
-        try {
-            $otherText = $other instanceof DOMNode ? self::stringify($other) : '';
-            
-            $comparator = new ScalarComparator();
-            
-            $comparator->assertEquals($this->expectedText, $otherText);
-        } catch (ComparisonFailure $f) {
-            if ($returnResult) {
-                return false;
-            }
-            
-            throw new ExpectationFailedException(trim($description . "\n" . sprintf('Failed asserting that %s.%s%s', $this->failureDescription($other), "\n", $this->additionalFailureDescription($other))), $f);
+        $otherText = $other instanceof DOMNode ? self::stringify($other) : (string) $other;
+        
+        if ($this->expectedText === $otherText) {
+            return true;
         }
         
-        return true;
+        if ($returnResult) {
+            return false;
+        }
+        
+        $this->fail($other, $description, $this->createComparison($other, $otherText));
+        
+        return null;
+    }
+    
+    private function createComparison($other, string $otherText): ComparisonFailure {
+        return new ComparisonFailure($this->expected, $other, $this->expectedText, $otherText);
     }
     
     protected function failureDescription($other): string {
