@@ -89,12 +89,24 @@ class FarahServer {
                 }
             }
             
-            $command = sprintf('composer exec bdi detect %s', escapeshellarg($driversDirectory));
-            if (CLI::execute($command) !== 0) {
+            if (! $this->detectDrivers($driversDirectory)) {
                 break;
             }
         }
         
         throw new RuntimeException(sprintf('Failed to find a valid browser driver. Drivers available are: [%s]', implode(', ', FileSystem::scanDir($driversDirectory))));
+    }
+    
+    private function detectDrivers(string $driversDirectory): bool {
+        $rootDirectory = __FILE__;
+        $executableDirectory = DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'dbrekelmans' . DIRECTORY_SEPARATOR . 'bdi' . DIRECTORY_SEPARATOR . 'bdi';
+        for ($i = 0; $i < 2; $i ++) {
+            $rootDirectory .= DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..';
+            if ($executable = realpath($rootDirectory . $executableDirectory)) {
+                $command = sprintf('%s %s detect %s', escapeshellarg(PHP_BINARY), escapeshellarg($executable), escapeshellarg($driversDirectory));
+                return CLI::execute($command) === 0;
+            }
+        }
+        return false;
     }
 }
