@@ -14,6 +14,7 @@
 		"slothsoft/farah" : "^1.23.0",
 		"symfony/panther" : "^1.1.2",
 		"dbrekelmans/bdi" : "^1.2.0",
+		"symfony/dom-crawler" : "^5.4.48",
 		"php-webdriver/webdriver" : "^1.15.2",
 		"phpunit/phpunit" : "~9.6.23"
 	},
