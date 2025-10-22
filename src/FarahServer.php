@@ -123,7 +123,7 @@ class FarahServer {
     private function detectDrivers(string $driversDirectory): bool {
         $rootDirectory = __DIR__;
         $executableDirectory = DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'dbrekelmans' . DIRECTORY_SEPARATOR . 'bdi' . DIRECTORY_SEPARATOR . 'bdi';
-        for ($i = 0; $i < 3; $i ++) {
+        for ($i = 0; $i < 4; $i ++) {
             $rootDirectory .= DIRECTORY_SEPARATOR . '..';
             if ($executable = realpath($rootDirectory . $executableDirectory)) {
                 $command = sprintf('%s %s detect %s', escapeshellarg(PHP_BINARY), escapeshellarg($executable), escapeshellarg($driversDirectory));
