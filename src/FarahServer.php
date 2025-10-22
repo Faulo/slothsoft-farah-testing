@@ -64,6 +64,11 @@ class FarahServer {
         'geckodriver'
     ];
     
+    private static array $firefoxArguments = [
+        '--headless',
+        '--window-size=1200,1100'
+    ];
+    
     private static array $chromeExecutables = [
         'chromedriver.exe',
         'chromedriver'
@@ -92,7 +97,7 @@ class FarahServer {
         for ($i = 0; $i < 2; $i ++) {
             foreach (self::$firefoxExecutables as $executable) {
                 if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
-                    return Client::createFirefoxClient($driversFile, null, $options, $this->uri);
+                    return Client::createFirefoxClient($driversFile, self::$firefoxArguments, $options, $this->uri);
                 }
             }
             
