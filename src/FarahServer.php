@@ -67,7 +67,8 @@ class FarahServer {
     private static array $firefoxArguments = [
         '--headless',
         '--window-size=1200,1100',
-        '--no-deelevate'
+        '--no-deelevate',
+        '--new-instance'
     ];
     
     private static array $chromeExecutables = [
