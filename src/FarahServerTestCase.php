@@ -8,36 +8,37 @@ use Symfony\Component\Panther\Client;
 
 abstract class FarahServerTestCase extends TestCase {
     
-    private static ?FarahServer $server;
+    protected static FarahServer $server;
     
     protected Client $client;
     
     public static function setUpBeforeClass(): void {
-        self::$server = new FarahServer();
-        static::setUpServer(self::$server);
-        self::$server->start();
+        static::$server = new FarahServer();
+        static::setUpServer();
+        static::$server->start();
     }
     
-    protected static function setUpServer(FarahServer $server): void {}
+    protected static function setUpServer(): void {}
     
     public static function tearDownAfterClass(): void {
-        self::$server->quit();
-        self::$server = null;
+        static::$server->quit();
+        static::$server = new FarahServer();
     }
     
     protected function setUp(): void {
         try {
-            $this->client = self::$server->createClient();
+            $this->client = static::$server->createClient();
         } catch (BrowserDriverNotFoundException $e) {
             self::markTestSkipped($e->getMessage());
         }
         
-        $this->setUpClient($this->client);
+        $this->setUpClient();
     }
     
-    protected function setUpClient(Client $client): void {}
+    protected function setUpClient(): void {}
     
     protected function tearDown(): void {
         $this->client->quit();
+        unset($this->client);
     }
 }
