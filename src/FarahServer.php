@@ -66,7 +66,10 @@ class FarahServer {
     }
     
     public function quit() {
-        $this->manager->quit();
+        if (isset($this->manager)) {
+            $this->manager->quit();
+            unset($this->manager);
+        }
     }
     
     private static array $firefoxExecutables = [
