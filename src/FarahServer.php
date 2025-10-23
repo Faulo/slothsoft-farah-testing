@@ -10,6 +10,8 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\ProcessManager\WebServerManager;
+use Slothsoft\Farah\Exception\FileNotFoundException;
+use SplFileInfo;
 
 class FarahServer {
     
@@ -32,9 +34,13 @@ class FarahServer {
     public function __construct() {}
     
     public function setModule(FarahUrlAuthority $module, string $assetsDirectory): void {
+        if (! is_dir($assetsDirectory)) {
+            throw new FileNotFoundException(new SplFileInfo($assetsDirectory));
+        }
+        
         $this->env['FARAH_MODULE_VENDOR'] = $module->getVendor();
         $this->env['FARAH_MODULE_NAME'] = $module->getModule();
-        $this->env['FARAH_MODULE_MANIFEST'] = $assetsDirectory;
+        $this->env['FARAH_MODULE_MANIFEST'] = realpath($assetsDirectory);
     }
     
     public function setSitemap(FarahUrl $url): void {
