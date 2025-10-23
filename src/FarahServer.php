@@ -56,6 +56,10 @@ class FarahServer {
     }
     
     public function __destruct() {
+        $this->quit();
+    }
+    
+    public function quit() {
         $this->manager->quit();
     }
     
