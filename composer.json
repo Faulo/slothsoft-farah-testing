@@ -35,5 +35,9 @@
 		"branch-alias" : {
 			"dev-main" : "1.1.x-dev"
 		}
+	},
+	"homepage" : "http://farah.slothsoft.net/modules/farah-testing",
+	"require-dev" : {
+		"phpunit/phpunit" : "~9.6.23"
 	}
 }
