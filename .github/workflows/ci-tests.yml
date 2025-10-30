@@ -29,6 +29,8 @@ jobs:
           php_extensions: ${{ matrix.extensions }}
           command: update
           args: --prefer-${{ matrix.composer }}
+        env:
+          COMPOSER_ROOT_VERSION: "dev-main"
 
       - name: Run PHPUnit
         uses: php-actions/phpunit@v4
