@@ -3,12 +3,17 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use PHPUnit\Framework\TestCase;
+use Slothsoft\FarahTesting\TestUtils;
 use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
 use Slothsoft\Farah\Schema\SchemaLocator;
 use DOMDocument;
 use Throwable;
 
 class AbstractTestCase extends TestCase {
+    
+    public static function setUpBeforeClass(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+    }
     
     protected function failException(Throwable $e): void {
         $this->fail(sprintf('%s:%s%s%s%s', get_class($e), PHP_EOL, $e->getMessage(), PHP_EOL, $e->getTraceAsString()));
