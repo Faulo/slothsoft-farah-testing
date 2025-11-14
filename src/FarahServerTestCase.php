@@ -13,6 +13,8 @@ abstract class FarahServerTestCase extends TestCase {
     protected Client $client;
     
     public static function setUpBeforeClass(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        
         static::$server = new FarahServer();
         static::setUpServer();
         static::$server->start();

@@ -20,6 +20,8 @@ class FarahServerTest extends TestCase {
     private static int $reporting;
     
     public static function setUpBeforeClass(): void {
+        TestUtils::changeWorkingDirectoryToComposerRoot();
+        
         self::$reporting = error_reporting(E_ERROR | E_WARNING | E_PARSE);
     }
     
