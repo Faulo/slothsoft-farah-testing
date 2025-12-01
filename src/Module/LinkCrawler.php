@@ -120,20 +120,15 @@ final class LinkCrawler {
     private function getLinkingElements(string $namespace): iterable {
         switch ($namespace) {
             case DOMHelper::NS_HTML:
-            case DOMHelper::NS_SVG:
                 yield from self::LINKING_ELEMENTS_HTML;
-                yield from self::LINKING_ELEMENTS_XINCLUDE;
                 break;
             case DOMHelper::NS_XSL:
                 yield from self::LINKING_ELEMENTS_XSLT;
-                yield from self::LINKING_ELEMENTS_XINCLUDE;
                 break;
             case DOMHelper::NS_XSD:
                 yield from self::LINKING_ELEMENTS_XSD;
-                yield from self::LINKING_ELEMENTS_XINCLUDE;
                 break;
             default:
-                yield from self::LINKING_ELEMENTS_XINCLUDE;
                 break;
         }
     }
@@ -146,6 +141,7 @@ final class LinkCrawler {
     
     public function crawlDocument(DOMDocument $document): iterable {
         if ($document->documentElement) {
+            $xpath = DOMHelper::loadXPath($document, 0);
             foreach ($this->getLinkingElements((string) $document->documentElement->namespaceURI) as $args) {
                 [
                     $ns,
@@ -153,7 +149,9 @@ final class LinkCrawler {
                     $attribute,
                     $isRequired
                 ] = $args;
-                foreach ($document->getElementsByTagNameNS($ns, $tag) as $linkNode) {
+                $xpath->registerNamespace('search', $ns);
+                $query = sprintf('//search:%s[count(ancestor::*) = count(ancestor::search:*)]', $tag);
+                foreach ($xpath->query($query) as $linkNode) {
                     if ($linkNode->hasAttribute(Dictionary::XPATH_DICT_ATTR_REPLACE)) {
                         continue;
                     }
