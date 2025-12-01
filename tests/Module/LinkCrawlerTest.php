@@ -78,5 +78,35 @@ EOT,
 EOT,
             []
         ];
+        
+        yield 'svg links' => [
+            <<<EOT
+<svg xmlns="http://www.w3.org/2000/svg">
+    <a href="/a"/>
+    <use href="/use"/>
+    <script href="/script"/>
+    <image href="/image"/>
+    <feImage href="/feImage"/>
+</svg>
+EOT,
+            [
+                "a href '/a'" => '/a',
+                "use href '/use'" => '/use',
+                "script href '/script'" => '/script',
+                "image href '/image'" => '/image',
+                "feImage href '/feImage'" => '/feImage'
+            ]
+        ];
+        
+        yield 'svg other-namespace links' => [
+            <<<EOT
+<svg xmlns="http://www.w3.org/2000/svg">
+    <link xmlns="http://www.w3.org/1999/xhtml" href="/link"/>
+</svg>
+EOT,
+            [
+                "link href '/link'" => '/link'
+            ]
+        ];
     }
 }

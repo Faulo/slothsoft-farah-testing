@@ -14,67 +14,123 @@ final class LinkCrawler {
             DOMHelper::NS_HTML,
             'a',
             'href',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'link',
             'href',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'script',
             'src',
+            false,
             false
         ],
         [
             DOMHelper::NS_HTML,
             'img',
             'src',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'video',
             'src',
+            false,
             false
         ],
         [
             DOMHelper::NS_HTML,
             'audio',
             'src',
+            false,
             false
         ],
         [
             DOMHelper::NS_HTML,
             'source',
             'src',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'track',
             'src',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'iframe',
             'src',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'embed',
             'src',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_HTML,
             'form',
             'action',
+            false,
             false
+        ]
+    ];
+    
+    private const LINKING_ELEMENTS_SVG = [
+        [
+            DOMHelper::NS_SVG,
+            'a',
+            'href',
+            true,
+            false
+        ],
+        [
+            DOMHelper::NS_SVG,
+            'use',
+            'href',
+            false,
+            false
+        ],
+        [
+            DOMHelper::NS_SVG,
+            'script',
+            'href',
+            false,
+            false
+        ],
+        [
+            DOMHelper::NS_SVG,
+            'image',
+            'href',
+            true,
+            false
+        ],
+        [
+            DOMHelper::NS_SVG,
+            'feImage',
+            'href',
+            true,
+            false
+        ],
+        [
+            DOMHelper::NS_HTML,
+            'link',
+            'href',
+            true,
+            true
         ]
     ];
     
@@ -83,13 +139,15 @@ final class LinkCrawler {
             DOMHelper::NS_XSL,
             'include',
             'href',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_XSL,
             'import',
             'href',
-            true
+            true,
+            false
         ]
     ];
     
@@ -98,12 +156,14 @@ final class LinkCrawler {
             DOMHelper::NS_XSD,
             'include',
             'schemaLocation',
-            true
+            true,
+            false
         ],
         [
             DOMHelper::NS_XSD,
             'import',
             'schemaLocation',
+            false,
             false
         ]
     ];
@@ -113,6 +173,7 @@ final class LinkCrawler {
             DOMHelper::NS_XINCLUDE,
             'include',
             'href',
+            true,
             true
         ]
     ];
@@ -121,6 +182,9 @@ final class LinkCrawler {
         switch ($namespace) {
             case DOMHelper::NS_HTML:
                 yield from self::LINKING_ELEMENTS_HTML;
+                break;
+            case DOMHelper::NS_SVG:
+                yield from self::LINKING_ELEMENTS_SVG;
                 break;
             case DOMHelper::NS_XSL:
                 yield from self::LINKING_ELEMENTS_XSLT;
@@ -131,6 +195,8 @@ final class LinkCrawler {
             default:
                 break;
         }
+        
+        yield from self::LINKING_ELEMENTS_XINCLUDE;
     }
     
     private Set $whitelist;
@@ -147,10 +213,11 @@ final class LinkCrawler {
                     $ns,
                     $tag,
                     $attribute,
-                    $isRequired
+                    $isRequired,
+                    $canAppearAlone
                 ] = $args;
                 $xpath->registerNamespace('search', $ns);
-                $query = sprintf('//search:%s[count(ancestor::*) = count(ancestor::search:*)]', $tag);
+                $query = $canAppearAlone ? sprintf('//search:%s', $tag) : sprintf('//search:%s[count(ancestor::*) = count(ancestor::search:*)]', $tag);
                 foreach ($xpath->query($query) as $linkNode) {
                     if ($linkNode->hasAttribute(Dictionary::XPATH_DICT_ATTR_REPLACE)) {
                         continue;
