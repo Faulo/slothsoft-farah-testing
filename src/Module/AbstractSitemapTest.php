@@ -299,7 +299,21 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                 ->toStream();
             $this->assertNotNull($stream);
         } catch (HttpStatusException $e) {
-            $this->assertLessThan(400, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
+            $message = sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage());
+            switch ($e->getCode()) {
+                case 302:
+                case 307:
+                case 308:
+                    $headers = $e->getAdditionalHeaders();
+                    $this->assertArrayHasKey('location', $headers, $message . PHP_EOL . 'But was missing the "location" header!');
+                    $location = $headers['location'];
+                    $host = parse_url($location, PHP_URL_HOST);
+                    $this->assertNotNull($host, $message . PHP_EOL . 'But was redirecting to another page on the server!');
+                    break;
+                default:
+                    $this->assertLessThan(400, $e->getCode(), $message);
+                    break;
+            }
         }
     }
     
