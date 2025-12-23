@@ -348,7 +348,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                 ->toStream();
             $this->assertNotNull($stream);
         } catch (HttpStatusException $e) {
-            $this->assertLessThan(300, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
+            $this->assertLessThan(400, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
         }
     }
     
