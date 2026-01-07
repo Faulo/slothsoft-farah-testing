@@ -67,7 +67,11 @@ class FarahServerTest extends TestCase {
             $client->request('GET', '/slothsoft@farah/phpinfo');
             
             $actual = $client->executeScript(<<<EOT
-return document.querySelector("h1").innerHTML;
+const node = document.querySelector("h1");
+if (!node) {
+    return "ERROR: no h1 node";
+}
+return node.innerHTML;
 EOT);
             
             $this->assertThat($actual, new StringContains(PHP_VERSION));
