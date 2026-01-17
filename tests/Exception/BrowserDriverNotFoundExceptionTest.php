@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class BrowserDriverNotFoundExceptionTest extends TestCase {
+final class BrowserDriverNotFoundExceptionTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(BrowserDriverNotFoundException::class), "Failed to load class 'Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException'!");

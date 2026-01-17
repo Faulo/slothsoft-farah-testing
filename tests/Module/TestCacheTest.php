@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @todo auto-generated
  */
-class TestCacheTest extends TestCase {
+final class TestCacheTest extends TestCase {
     
     public function testClassExists(): void {
         $this->assertTrue(class_exists(TestCache::class), "Failed to load class 'Slothsoft\FarahTesting\Module\TestCache'!");
