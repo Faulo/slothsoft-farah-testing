@@ -14,6 +14,6 @@ use PHPUnit\Framework\TestCase;
 class MockManifestTest extends TestCase {
     
     public function testClassExists(): void {
-        $this->assertTrue(class_exists(MockManifest::class), "Failed to load class 'Slothsoft\Farah\ModuleTests\MockManifest'!");
+        $this->assertTrue(class_exists(MockManifest::class), "Failed to load class 'Slothsoft\FarahTesting\Module\MockManifest'!");
     }
 }
