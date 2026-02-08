@@ -21,7 +21,7 @@ final class FileEqualsTextFile extends Constraint {
      * @param int $options
      *            same options as PHP's file() function
      */
-    public function __construct($file, int $options = FILE_TEXT) {
+    public function __construct($file, int $options = 0) {
         $this->file = $file instanceof SplFileInfo ? $file : FileInfoFactory::createFromPath((string) $file);
         $this->options = $options;
     }
