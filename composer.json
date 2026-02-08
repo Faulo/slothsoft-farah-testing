@@ -33,7 +33,7 @@
 	],
 	"extra" : {
 		"branch-alias" : {
-			"dev-main" : "1.2.x-dev"
+			"dev-main" : "1.3.x-dev"
 		}
 	},
 	"homepage" : "http://farah.slothsoft.net/modules/farah-testing"
