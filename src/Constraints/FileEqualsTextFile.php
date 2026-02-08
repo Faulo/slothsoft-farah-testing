@@ -7,25 +7,23 @@ use PHPUnit\Framework\Constraint\Constraint;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 use Slothsoft\Core\IO\FileInfoFactory;
-use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use SplFileInfo;
 
-final class FileEqualsFile extends Constraint {
-    
-    public const DEFAULT_ROW_LENGTH = 128;
+final class FileEqualsTextFile extends Constraint {
     
     private SplFileInfo $file;
     
-    private int $rowLength;
+    private int $options;
     
     /**
      *
      * @param SplFileInfo|string $file
-     * @param int $rowLength
+     * @param int $options
+     *            same options as PHP's file() function
      */
-    public function __construct($file, int $rowLength = self::DEFAULT_ROW_LENGTH) {
+    public function __construct($file, int $options = FILE_TEXT) {
         $this->file = $file instanceof SplFileInfo ? $file : FileInfoFactory::createFromPath((string) $file);
-        $this->rowLength = $rowLength;
+        $this->options = $options;
     }
     
     public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
@@ -48,20 +46,20 @@ final class FileEqualsFile extends Constraint {
                     throw new ExpectationFailedException(sprintf("Actual file '%s' does not exist.", $this->file));
                 }
                 
-                $expected = $this->file->openFile(StreamWrapperInterface::MODE_OPEN_READONLY);
-                $actual = $other->openFile(StreamWrapperInterface::MODE_OPEN_READONLY);
+                $expected = file((string) $this->file, $this->options);
+                $actual = file((string) $other, $this->options);
                 
-                $expectedSize = $this->file->getSize();
+                $expectedSize = count($expected);
                 
-                for ($i = 0; $i < $expectedSize; $i += $this->rowLength) {
-                    $expectedRow = $expected->fread($this->rowLength);
-                    $actualRow = $actual->fread($this->rowLength);
+                for ($i = 0; $i < $expectedSize; $i ++) {
+                    $expectedRow = $expected[$i];
+                    $actualRow = $actual[$i] ?? '';
                     
                     $comparator = $comparatorFactory->getComparatorFor($expectedRow, $actualRow);
                     $comparator->assertEquals($expectedRow, $actualRow);
                 }
                 
-                $actualSize = $actual->getSize();
+                $actualSize = count($actual);
                 $comparator = $comparatorFactory->getComparatorFor($expectedSize, $actualSize);
                 $comparator->assertEquals($expectedSize, $actualSize);
             } catch (ComparisonFailure $f) {
