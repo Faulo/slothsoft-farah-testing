@@ -67,9 +67,7 @@ final class DOMNodeEqualTo extends Constraint {
     }
     
     public static function stringify(DOMNode $node): string {
-        return implode("\n", [
-            ...self::stringifyIterator($node)
-        ]);
+        return implode("\n", iterator_to_array(self::stringifyIterator($node), false));
     }
     
     private static function stringifyIterator(DOMNode $node, int $depth = 0): iterable {
