@@ -12,10 +12,10 @@
 		"php" : ">=8.3",
 		"slothsoft/core" : "^1.14.19",
 		"slothsoft/farah" : "^1.28.1",
-		"symfony/panther" : ">=1.1.2",
+		"symfony/panther" : "^2.2.0",
 		"dbrekelmans/bdi" : "^1.4.1",
-		"symfony/dom-crawler" : ">=5.4.48",
-		"php-webdriver/webdriver" : ">=1.16.0",
+		"symfony/dom-crawler" : "^7.4.8",
+		"php-webdriver/webdriver" : "^1.16.0",
 		"phpunit/phpunit" : "~9.6.31"
 	},
 	"autoload" : {
