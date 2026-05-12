@@ -1,13 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
+use DOMDocument;
+use DOMElement;
 use Ds\Set;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
-use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
 use Slothsoft\Farah\Exception\AssetPathNotFoundException;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
@@ -19,13 +21,12 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
 use Slothsoft\Farah\FarahUrl\FarahUrlPath;
 use Slothsoft\Farah\Http\MessageFactory;
-use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
 use Slothsoft\Farah\Module\Manifest\Manifest;
 use Slothsoft\Farah\Module\Manifest\ManifestInterface;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
-use DOMDocument;
-use DOMElement;
+use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
 use Throwable;
 
 abstract class AbstractModuleTest extends AbstractTestCase {
@@ -103,7 +104,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                     $provider[$key] ??= [
                         $url
                     ];
-                } catch (Throwable $e) {}
+                } catch (Throwable $e) {
+                }
             }
             return $provider;
         });
@@ -205,7 +207,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                     $provider[$key] ??= [
                         $url
                     ];
-                } catch (Throwable $e) {}
+                } catch (Throwable $e) {
+                }
             }
             return $provider;
         });
@@ -381,7 +384,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                             }
                         }
                     }
-                } catch (EmptyTransformationException $e) {}
+                } catch (EmptyTransformationException $e) {
+                }
             }
             
             Module::clearAllCachedAssets();

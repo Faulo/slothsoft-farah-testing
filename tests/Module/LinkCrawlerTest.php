@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Constraint\IsEqual;
 use DOMDocument;
+use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\TestCase;
 
 /**
  * LinkCrawlerTest

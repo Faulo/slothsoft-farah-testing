@@ -1,17 +1,18 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting;
 
 use Slothsoft\Core\CLI;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
-use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
+use Slothsoft\Farah\Exception\FileNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
+use SplFileInfo;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\ProcessManager\WebServerManager;
-use Slothsoft\Farah\Exception\FileNotFoundException;
-use SplFileInfo;
 
 class FarahServer {
     
@@ -31,7 +32,8 @@ class FarahServer {
     
     public string $uri;
     
-    public function __construct() {}
+    public function __construct() {
+    }
     
     public function setModule(FarahUrlAuthority $module, string $assetsDirectory): void {
         if (! is_dir($assetsDirectory)) {
@@ -109,7 +111,7 @@ class FarahServer {
         $options['port'] = self::findFreePort();
         $options['request_timeout_in_ms'] = 300_000;
         
-        for ($i = 0; $i < 2; $i ++) {
+        for ($i = 0; $i < 2; $i++) {
             foreach (self::$firefoxExecutables as $executable) {
                 if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
                     return Client::createFirefoxClient($driversFile, self::$firefoxArguments, $options, $this->uri);
@@ -136,7 +138,7 @@ class FarahServer {
     private function detectDrivers(string $driversDirectory): bool {
         $rootDirectory = __DIR__;
         $executableDirectory = DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'dbrekelmans' . DIRECTORY_SEPARATOR . 'bdi' . DIRECTORY_SEPARATOR . 'bdi';
-        for ($i = 0; $i < 4; $i ++) {
+        for ($i = 0; $i < 4; $i++) {
             $rootDirectory .= DIRECTORY_SEPARATOR . '..';
             if ($executable = realpath($rootDirectory . $executableDirectory)) {
                 $command = sprintf('%s %s detect %s', escapeshellarg(PHP_BINARY), escapeshellarg($executable), escapeshellarg($driversDirectory));

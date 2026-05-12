@@ -1,27 +1,28 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
+use DOMDocument;
+use DOMElement;
 use Ds\Set;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
-use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
 use Slothsoft\Farah\Exception\HttpDownloadException;
 use Slothsoft\Farah\Exception\HttpStatusException;
 use Slothsoft\Farah\Exception\PageRedirectionException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Http\MessageFactory;
-use Slothsoft\Farah\Module\Module;
+use Slothsoft\Farah\Kernel;
 use Slothsoft\Farah\Module\Asset\AssetInterface;
+use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Module\Result\ResultInterface;
 use Slothsoft\Farah\RequestStrategy\LookupAssetStrategy;
 use Slothsoft\Farah\RequestStrategy\LookupPageStrategy;
 use Slothsoft\Farah\Sites\Domain;
-use DOMDocument;
-use DOMElement;
 use Throwable;
 
 abstract class AbstractSitemapTest extends AbstractTestCase {
@@ -77,7 +78,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             try {
                 $document = Module::resolveToDOMWriter($url)->toDocument();
                 $this->getSitesIncludesCrawl($ret, $url, $document);
-            } catch (Throwable $e) {}
+            } catch (Throwable $e) {
+            }
         }
     }
     
@@ -155,7 +157,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     
     /**
      *
-     * @depends testIncludeExists
+     * @depends      testIncludeExists
      * @dataProvider includeProvider
      */
     public function testIncludeIsValidAccordingToSchema(Farahurl $url): void {
@@ -376,7 +378,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                                 }
                             }
                         }
-                    } catch (EmptyTransformationException $e) {}
+                    } catch (EmptyTransformationException $e) {
+                    }
                     
                     $this->getDomain()
                         ->clearCurrentPageNode();

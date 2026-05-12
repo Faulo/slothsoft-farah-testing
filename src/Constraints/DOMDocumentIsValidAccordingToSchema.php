@@ -1,14 +1,15 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Constraints;
 
-use PHPUnit\Framework\ExpectationFailedException;
+use DOMDocument;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Schema\SchemaLocator;
-use DOMDocument;
 use SplFileInfo;
 
 final class DOMDocumentIsValidAccordingToSchema extends Constraint {

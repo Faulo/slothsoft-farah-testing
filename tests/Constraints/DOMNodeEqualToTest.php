@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Constraints;
 
+use DOMDocument;
+use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\DOMHelper;
-use DOMDocument;
 
 /**
  * DOMNodeEqualToTest

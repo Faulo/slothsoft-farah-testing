@@ -1,15 +1,16 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsFalse;
 use PHPUnit\Framework\Constraint\StringContains;
+use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
-use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Slothsoft\Farah\FarahUrl\FarahUrl;
 use Slothsoft\Farah\FarahUrl\FarahUrlAuthority;
+use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 
 /**
  * FarahServerTest
@@ -89,7 +90,8 @@ if (!node) {
     return "ERROR: no h1 node";
 }
 return node.innerHTML;
-EOT);
+EOT
+            );
             $client->quit();
             
             $this->assertThat($actual, new StringContains(PHP_VERSION));

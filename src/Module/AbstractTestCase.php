@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
-use PHPUnit\Framework\TestCase;
-use Slothsoft\FarahTesting\TestUtils;
-use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
-use Slothsoft\Farah\Schema\SchemaLocator;
 use DOMDocument;
+use PHPUnit\Framework\TestCase;
+use Slothsoft\Farah\Schema\SchemaLocator;
+use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
+use Slothsoft\FarahTesting\TestUtils;
 use Throwable;
 
 class AbstractTestCase extends TestCase {

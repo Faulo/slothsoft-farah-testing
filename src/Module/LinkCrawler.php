@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
+use DOMDocument;
 use Ds\Set;
 use Slothsoft\Core\DOMHelper;
-use DOMDocument;
 use Slothsoft\Farah\Dictionary;
 
 final class LinkCrawler {

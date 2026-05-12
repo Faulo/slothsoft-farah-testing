@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Constraints;
 
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 use Slothsoft\Core\IO\FileInfoFactory;
@@ -51,7 +52,7 @@ final class FileEqualsTextFile extends Constraint {
                 
                 $expectedSize = count($expected);
                 
-                for ($i = 0; $i < $expectedSize; $i ++) {
+                for ($i = 0; $i < $expectedSize; $i++) {
                     $expectedRow = $expected[$i];
                     $actualRow = $actual[$i] ?? '';
                     

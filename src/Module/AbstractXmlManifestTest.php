@@ -1,10 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
+use DOMDocument;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
-use DOMDocument;
 use Slothsoft\Farah\Schema\SchemaLocator;
 
 abstract class AbstractXmlManifestTest extends AbstractManifestTest {

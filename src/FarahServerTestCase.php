@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting;
 
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,8 @@ abstract class FarahServerTestCase extends TestCase {
         static::$server->start();
     }
     
-    protected static function setUpServer(): void {}
+    protected static function setUpServer(): void {
+    }
     
     public static function tearDownAfterClass(): void {
         static::$server->quit();
@@ -37,7 +39,8 @@ abstract class FarahServerTestCase extends TestCase {
         $this->setUpClient();
     }
     
-    protected function setUpClient(): void {}
+    protected function setUpClient(): void {
+    }
     
     protected function tearDown(): void {
         $this->client->quit();

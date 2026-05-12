@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Module;
 
 final class TestCache {
@@ -10,7 +11,8 @@ final class TestCache {
         return self::$caches[$key] ??= new self();
     }
     
-    private function __construct() {}
+    private function __construct() {
+    }
     
     private array $cache = [];
     

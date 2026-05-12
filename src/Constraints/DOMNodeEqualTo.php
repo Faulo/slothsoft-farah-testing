@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Slothsoft\FarahTesting\Constraints;
 
+use DOMNode;
 use PHPUnit\Framework\Constraint\Constraint;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
-use DOMNode;
 
 final class DOMNodeEqualTo extends Constraint {
     
@@ -45,9 +46,9 @@ final class DOMNodeEqualTo extends Constraint {
     
     private function createComparison($other, string $otherText): object {
         foreach ([
-            'PHPUnitPHAR\SebastianBergmann\Comparator\ComparisonFailure',
-            'SebastianBergmann\Comparator\ComparisonFailure'
-        ] as $className) {
+                     'PHPUnitPHAR\SebastianBergmann\Comparator\ComparisonFailure',
+                     'SebastianBergmann\Comparator\ComparisonFailure'
+                 ] as $className) {
             if (class_exists($className)) {
                 return new $className($this->expected, $other, $this->expectedText, $otherText);
             }
@@ -85,7 +86,7 @@ final class DOMNodeEqualTo extends Constraint {
                 break;
             case XML_ELEMENT_NODE:
                 yield sprintf('%s<%s', self::printDepth($depth), self::printName($node));
-                $depth ++;
+                $depth++;
                 
                 $attributes = [];
                 foreach ($node->attributes as $child) {
