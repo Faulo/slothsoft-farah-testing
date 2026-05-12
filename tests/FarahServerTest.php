@@ -83,18 +83,20 @@ class FarahServerTest extends TestCase {
         try {
             $client = $sut->createClient();
             $client->request('GET', '/slothsoft@farah/phpinfo');
+            $source = $client->getPageSource();
 
             $actual = $client->executeScript(<<<EOT
-const node = document.querySelector("h1");
+console.log(document.documentElement);
+const node = document.querySelector("title");
 if (!node) {
-    return "ERROR: no h1 node. HTML:\\n" + document.body.outerHTML;
+    return "ERROR: no title node. HTML:\\n" + document.documentElement;
 }
 return node.innerHTML;
 EOT
             );
             $client->quit();
 
-            $this->assertThat($actual, new IsEqual(sprintf('PHP Version %s', PHP_VERSION)));
+            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
         } catch (BrowserDriverNotFoundException $e) {
             $this->markTestSkipped();
         }
