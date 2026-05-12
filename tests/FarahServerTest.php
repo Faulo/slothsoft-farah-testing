@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting;
 
+use DOMDocument;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsFalse;
 use PHPUnit\Framework\Constraint\StringContains;
@@ -71,6 +72,24 @@ class FarahServerTest extends TestCase {
             $actual = $client->ping();
 
             $this->assertThat($actual, new IsFalse());
+        } catch (BrowserDriverNotFoundException $e) {
+            $this->markTestSkipped();
+        }
+    }
+
+    public function test_createClient_request() {
+        $sut = new FarahServer();
+        $sut->start();
+
+        try {
+            $client = $sut->createClient();
+            $client->request('GET', '/slothsoft@farah/phpinfo');
+            $source = $client->getPageSource();
+            $client->quit();
+
+            $document = new DOMDocument();
+            $actual = $document->loadXML($source);
+            $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
         } catch (BrowserDriverNotFoundException $e) {
             $this->markTestSkipped();
         }
