@@ -57,7 +57,7 @@ pipeline {
 								branches[name] = {
 									stage(name) {
 										node(label) {
-											ws("${WORKSPACE}@${workspace}") {
+											ws("${WORKSPACE}/${workspace}") {
 												checkout scm
 
 												dir('.reports') {
