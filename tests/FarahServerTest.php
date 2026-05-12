@@ -90,6 +90,10 @@ class FarahServerTest extends TestCase {
             $document = new DOMDocument();
             $actual = $document->loadXML($source);
             $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
+
+            $xpath = DOMHelper::loadXPath($document);
+            $actual = $xpath->evaluate('string(//html:title)');
+            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
         } catch (BrowserDriverNotFoundException $e) {
             $this->markTestSkipped();
         }
@@ -115,7 +119,7 @@ EOT
             );
             $client->quit();
 
-            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
+            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
         } catch (BrowserDriverNotFoundException $e) {
             $this->markTestSkipped();
         }
