@@ -4,36 +4,42 @@ on: [ push ]
 
 jobs:
     run-tests:
-        name: Run Tests
+        name: PHP ${{ matrix.php }} / Composer ${{ matrix.composer }}
         runs-on: ubuntu-latest
+        
         strategy:
             fail-fast: false
             matrix:
                 composer: [ "lowest", "stable" ]
                 php: [ "8.2", "8.3", "8.4", "8.5" ]
-                extensions: [ "ctype curl dom iconv json libxml mbstring pcre phar sockets tokenizer xml xmlwriter xsl zip zlib" ]
+                extensions: [ "ctype, curl, dom, iconv, json, libxml, mbstring, pcre, phar, sockets, tokenizer, xml, xmlwriter, xsl, zip, zlib" ]
+        
         steps:
             -   name: Checkout Repository
                 uses: actions/checkout@v4
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    extensions: ${{ matrix.extensions }}
+                    tools: composer:v2
+                    coverage: none
 
             -   name: Cache Composer dependencies
                 uses: actions/cache@v4
                 with:
                     path: /tmp/composer-cache
-                    key: ${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('composer.json') }}-${{ matrix.composer }}
+                    key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ matrix.composer }}-${{ hashFiles('composer.json') }}
 
-            -   name: Install Composer
-                uses: php-actions/composer@v6
-                with:
-                    php_version: ${{ matrix.php }}
-                    php_extensions: ${{ matrix.extensions }}
-                    command: update
-                    args: --prefer-${{ matrix.composer }}
+            -   name: Install dependencies
+                run: composer update --prefer-${{ matrix.composer }} --no-interaction --no-progress
                 env:
                     COMPOSER_ROOT_VERSION: "dev-main"
+                    COMPOSER_CACHE_DIR: /tmp/composer-cache
 
             -   name: Run PHPUnit
-                run: composer exec phpunit -- --log-junit phpunit-${{ matrix.php }}-${{ matrix.composer }}.results.xml
+                run: vendor/bin/phpunit --log-junit phpunit-${{ matrix.php }}-${{ matrix.composer }}.results.xml
 
             -   name: Upload Test Results
                 if: always()
