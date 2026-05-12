@@ -86,9 +86,9 @@ class FarahServerTest extends TestCase {
             $client->request('GET', '/slothsoft@farah/phpinfo');
             $source = file_get_contents($client->getCurrentURL());
             $client->quit();
-
+            
             $document = new DOMDocument();
-            $actual = $document->loadHTML($source);
+            $actual = @$document->loadHTML($source);
             $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
 
             $xpath = DOMHelper::loadXPath($document);
