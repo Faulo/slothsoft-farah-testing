@@ -112,15 +112,15 @@ class FarahServer {
         $options['request_timeout_in_ms'] = 300_000;
 
         for ($i = 0; $i < 2; $i++) {
-            foreach (self::$chromeExecutables as $executable) {
-                if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
-                    return Client::createChromeClient($driversFile, self::$chromeArguments, $options, $this->uri);
-                }
-            }
-
             foreach (self::$firefoxExecutables as $executable) {
                 if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
                     return Client::createFirefoxClient($driversFile, self::$firefoxArguments, $options, $this->uri);
+                }
+            }
+
+            foreach (self::$chromeExecutables as $executable) {
+                if (file_exists($driversFile = $driversDirectory . DIRECTORY_SEPARATOR . $executable)) {
+                    return Client::createChromeClient($driversFile, self::$chromeArguments, $options, $this->uri);
                 }
             }
 
@@ -130,8 +130,8 @@ class FarahServer {
         }
 
         throw BrowserDriverNotFoundException::forDirectory($driversDirectory, [
-            ...self::$chromeExecutables,
             ...self::$firefoxExecutables,
+            ...self::$chromeExecutables
         ], FileSystem::scanDir($driversDirectory));
     }
 
