@@ -77,7 +77,29 @@ class FarahServerTest extends TestCase {
         }
     }
 
-    public function test_createClient_request() {
+    public function test_createClient_requestFromServer() {
+        $sut = new FarahServer();
+        $sut->start();
+
+        try {
+            $client = $sut->createClient();
+            $client->request('GET', '/slothsoft@farah/phpinfo');
+            $source = file_get_contents($client->getCurrentURL());
+            $client->quit();
+
+            $document = new DOMDocument();
+            $actual = $document->loadHTML($source);
+            $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
+
+            $xpath = DOMHelper::loadXPath($document);
+            $actual = $xpath->evaluate('string(//title)');
+            $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
+        } catch (BrowserDriverNotFoundException $e) {
+            $this->markTestSkipped();
+        }
+    }
+
+    public function test_createClient_requestFromClient() {
         $sut = new FarahServer();
         $sut->start();
 
