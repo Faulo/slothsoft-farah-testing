@@ -30,6 +30,10 @@ tab_width = 4
 # PHP-Dateien
 [*.php]
 
+# Einstellungen für neue Zeilen
+trim_trailing_whitespace = true
+end_of_line = lf
+
 #### EditorConfig-Basis ####
 
 # Aus Eclipse: lineSplit / line_length = 9999, also praktisch kein Hard-Wrap.
