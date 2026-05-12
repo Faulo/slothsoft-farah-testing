@@ -6,7 +6,7 @@ def unstable(def body) {
 
 def runComposerTest(def version, def variant) {
 	unstable {
-		callShell "composer update --prefer-${variant}"
+		callShell "composer update --prefer-${variant} --no-interaction --no-progress"
 		callShell "composer exec phpunit -- --log-junit .reports/${version}-${variant}.xml"
 	}
 }

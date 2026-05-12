@@ -22,22 +22,18 @@ jobs:
                     path: /tmp/composer-cache
                     key: ${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('composer.json') }}-${{ matrix.composer }}
 
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
+            -   name: Install Composer
+                uses: php-actions/composer@v6
                 with:
-                    php-version: ${{ matrix.php }}
-                    extensions: ${{ matrix.extensions }}
-                    tools: composer:v2
-                    coverage: none
-
-            -   name: Install Composer dependencies
-                run: composer update --prefer-${{ matrix.composer }} --no-interaction --no-progress
+                    php_version: ${{ matrix.php }}
+                    php_extensions: ${{ matrix.extensions }}
+                    command: update
+                    args: --prefer-${{ matrix.composer }}
                 env:
                     COMPOSER_ROOT_VERSION: "dev-main"
-                    COMPOSER_CACHE_DIR: /tmp/composer-cache
 
             -   name: Run PHPUnit
-                run: vendor/bin/phpunit --configuration phpunit.xml --log-junit phpunit-${{ matrix.php }}-${{ matrix.composer }}.results.xml
+                run: composer exec phpunit -- --log-junit phpunit-${{ matrix.php }}-${{ matrix.composer }}.results.xml
 
             -   name: Upload Test Results
                 if: always()
