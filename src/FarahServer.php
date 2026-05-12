@@ -141,7 +141,7 @@ class FarahServer {
         for ($i = 0; $i < 4; $i++) {
             $rootDirectory .= DIRECTORY_SEPARATOR . '..';
             if ($executable = realpath($rootDirectory . $executableDirectory)) {
-                $command = sprintf('%s %s detect %s', escapeshellarg(PHP_BINARY), escapeshellarg($executable), escapeshellarg($driversDirectory));
+                $command = sprintf('%s %s detect -vvv --no-interaction -- %s ', escapeshellarg(PHP_BINARY), escapeshellarg($executable), escapeshellarg($driversDirectory));
                 return CLI::execute($command) === 0;
             }
         }
