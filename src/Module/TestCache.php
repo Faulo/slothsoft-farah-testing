@@ -20,7 +20,7 @@ final class TestCache {
         return $this->cache[$key] ??= $generator();
     }
     
-    public function clear() {
+    public function clear(): void {
         $this->cache = [];
     }
 }

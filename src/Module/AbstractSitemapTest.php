@@ -8,6 +8,7 @@ use DOMElement;
 use Ds\Set;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\MimeTypeDictionary;
 use Slothsoft\Farah\Exception\EmptyTransformationException;
@@ -106,8 +107,8 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @depends testHasRootElement
      */
     public function testRootElementIsDomain(DOMElement $rootElement): void {
-        $this->assertEquals($rootElement->namespaceURI, DOMHelper::NS_FARAH_SITES);
-        $this->assertEquals($rootElement->localName, Domain::TAG_DOMAIN);
+        $this->assertThat($rootElement->namespaceURI, new IsEqual(DOMHelper::NS_FARAH_SITES));
+        $this->assertThat($rootElement->localName, new IsEqual(Domain::TAG_DOMAIN));
     }
     
     /**
@@ -128,7 +129,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     public function testSchemaIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertInstanceOf(DOMDocument::class, $document);
+        $this->assertNotNull($document);
         return $document;
     }
     
@@ -214,6 +215,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      *
      * @depends      testPageMustHaveOneOfRefOrRedirectOrExt
      * @dataProvider pageNodeProvider
+     * @deprecated
      */
     public function testPageResultExists(DOMElement $node): void {
         $path = $node->getAttribute('uri');
@@ -260,7 +262,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         try {
             $this->assertNotEquals('', $link, 'Link must not be empty');
             
-            if (strpos($link, 'mailto:') === 0) {
+            if (str_starts_with($link, 'mailto:')) {
                 $this->assertMatchesRegularExpression('~^mailto:.+$~', $link);
                 return;
             }

@@ -40,8 +40,6 @@ final class DOMNodeEqualTo extends Constraint {
         }
         
         $this->fail($other, $description, $this->createComparison($other, $otherText));
-        
-        return null;
     }
     
     private function createComparison($other, string $otherText): object {

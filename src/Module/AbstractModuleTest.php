@@ -69,9 +69,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         try {
             $url = FarahUrl::createFromReference($ref, $context);
             $this->assertNotNull($url);
-        } catch (MalformedUrlException $e) {
-            $this->failException($e);
-        } catch (ProtocolNotSupportedException $e) {
+        } catch (MalformedUrlException|ProtocolNotSupportedException $e) {
             $this->failException($e);
         }
     }
@@ -97,6 +95,10 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         
         return $cache->retrieve('assetReferenceUrlProvider', function () {
             $provider = [];
+            /**
+             * @var FarahUrl $context
+             * @var string $ref
+             */
             foreach ($this->getReferencedAssetReferences() as $context => $ref) {
                 try {
                     $url = FarahUrl::createFromReference($ref, $context);
@@ -172,9 +174,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         try {
             Module::resolveToExecutable($url);
             $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
+        } catch (ModuleNotFoundException|AssetPathNotFoundException $e) {
             $this->assertTrue(true);
         } catch (Throwable $e) {
             $this->failException($e);
@@ -258,9 +258,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         try {
             Module::resolveToExecutable($url);
             $this->assertTrue(true);
-        } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
-        } catch (AssetPathNotFoundException $e) {
+        } catch (ModuleNotFoundException|AssetPathNotFoundException $e) {
             $this->assertTrue(true);
         } catch (Throwable $e) {
             $this->failException($e);
@@ -290,7 +288,6 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         
         if (! MimeTypeDictionary::isXml($mimeType)) {
             $this->markTestSkipped("Won't attempt to validate non-XML resource '$url' with mime type '$mimeType'");
-            return;
         }
         
         $this->assertThat($url, new DOMDocumentIsValidAccordingToSchema());
@@ -304,7 +301,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         try {
             $this->assertNotEquals('', $link, 'Link must not be empty');
             
-            if (strpos($link, 'mailto:') === 0) {
+            if (str_starts_with($link, 'mailto:')) {
                 $this->assertMatchesRegularExpression('~^mailto:.+$~', $link);
                 return;
             }

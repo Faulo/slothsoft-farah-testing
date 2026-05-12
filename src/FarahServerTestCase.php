@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\FarahTesting\Exception\BrowserDriverNotFoundException;
 use Symfony\Component\Panther\Client;
@@ -13,6 +14,9 @@ abstract class FarahServerTestCase extends TestCase {
     
     protected Client $client;
     
+    /**
+     * @throws Exception
+     */
     public static function setUpBeforeClass(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
         

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use DOMDocument;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Farah\Schema\SchemaLocator;
 use Slothsoft\FarahTesting\Constraints\DOMDocumentIsValidAccordingToSchema;
@@ -12,6 +13,9 @@ use Throwable;
 
 class AbstractTestCase extends TestCase {
     
+    /**
+     * @throws Exception
+     */
     public static function setUpBeforeClass(): void {
         TestUtils::changeWorkingDirectoryToComposerRoot();
     }
@@ -36,6 +40,9 @@ class AbstractTestCase extends TestCase {
         return $getProperty($name, $args);
     }
     
+    /**
+     * @throws Exception
+     */
     protected function findSchemaLocation(DOMDocument $document): ?string {
         $locator = new SchemaLocator();
         return $locator->findSchemaLocation($document);

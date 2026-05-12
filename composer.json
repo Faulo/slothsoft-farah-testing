@@ -11,6 +11,9 @@
     "type": "library",
     "require": {
         "php": ">=8.2",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-sockets": "*",
         "slothsoft/core": "^1.14.19",
         "slothsoft/farah": "^1.28.2",
         "symfony/browser-kit": "^7.4.8",

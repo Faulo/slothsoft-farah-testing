@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use DOMDocument;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Module\Asset\ExecutableBuilderStrategy\ExecutableBuilderStrategyInterface;
 use Slothsoft\Farah\Module\Asset\InstructionStrategy\InstructionStrategyInterface;
@@ -36,8 +37,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
      * @depends testHasRootElement
      */
     public function testRootElementIsAssets(): void {
-        $this->assertEquals($this->getManifestRoot()
-            ->getTag(), Manifest::TAG_ASSET_ROOT);
+        $this->assertThat($this->getManifestRoot()->getTag(), new IsEqual(Manifest::TAG_ASSET_ROOT));
     }
     
     /**

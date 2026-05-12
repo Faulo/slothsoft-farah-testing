@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Constraints;
 
 use DOMDocument;
+use Exception;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -24,6 +25,9 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
         return 'is valid according to its XML schema';
     }
     
+    /**
+     * @throws Exception
+     */
     public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
         $document = $this->coerceToDomDocument($other);
         

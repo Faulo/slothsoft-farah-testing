@@ -24,8 +24,8 @@ final class FileEqualsFile extends Constraint {
      * @param SplFileInfo|string $file
      * @param int $rowLength
      */
-    public function __construct($file, int $rowLength = self::DEFAULT_ROW_LENGTH) {
-        $this->file = $file instanceof SplFileInfo ? $file : FileInfoFactory::createFromPath((string) $file);
+    public function __construct(SplFileInfo|string $file, int $rowLength = self::DEFAULT_ROW_LENGTH) {
+        $this->file = $file instanceof SplFileInfo ? $file : FileInfoFactory::createFromPath($file);
         $this->rowLength = $rowLength;
     }
     

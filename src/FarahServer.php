@@ -67,7 +67,7 @@ class FarahServer {
         $this->quit();
     }
     
-    public function quit() {
+    public function quit(): void {
         if (isset($this->manager)) {
             $this->manager->quit();
             unset($this->manager);

@@ -7,10 +7,13 @@ use Exception;
 
 final class TestUtils {
     
-    private static $composerRootFromProject = __DIR__ . '/..';
+    private static string $composerRootFromProject = __DIR__ . '/..';
     
-    private static $composerRootFromPackage = __DIR__ . '/../../../..';
+    private static string $composerRootFromPackage = __DIR__ . '/../../../..';
     
+    /**
+     * @throws Exception
+     */
     public static function changeWorkingDirectoryToComposerRoot(): void {
         if (self::isComposerDirectory(getcwd())) {
             return;

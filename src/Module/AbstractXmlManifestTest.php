@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use DOMDocument;
+use Exception;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\XML\LeanElement;
 use Slothsoft\Farah\Schema\SchemaLocator;
@@ -23,6 +24,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     /**
      *
      * @depends testManifestIsValidXml
+     * @throws Exception
      */
     public function testSchemaExists(DOMDocument $manifestDocument): string {
         $locator = new SchemaLocator();
@@ -39,7 +41,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     public function testSchemaIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertInstanceOf(DOMDocument::class, $document);
+        $this->assertNotNull($document);
         return $document;
     }
     
@@ -58,7 +60,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     public function testManifestIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertInstanceOf(DOMDocument::class, $document);
+        $this->assertNotNull($document);
         return $document;
     }
     
