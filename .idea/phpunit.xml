@@ -3,10 +3,10 @@
   <component name="PHPUnit">
     <option name="directories">
       <list>
-        <option value="$PROJECT_DIR$/.farah-vendor/slothsoft/blob/tests" />
         <option value="$PROJECT_DIR$/tests" />
-        <option value="$PROJECT_DIR$/.farah-vendor/sebastian/object-reflector/tests" />
+        <option value="$PROJECT_DIR$/.farah-vendor/slothsoft/blob/tests" />
         <option value="$PROJECT_DIR$/.farah-vendor/sebastian/recursion-context/tests" />
+        <option value="$PROJECT_DIR$/.farah-vendor/sebastian/object-reflector/tests" />
       </list>
     </option>
   </component>

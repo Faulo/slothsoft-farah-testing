@@ -82,17 +82,14 @@ class FarahServerTest extends TestCase {
         $sut->start();
 
         try {
-            $client = $sut->createClient();
-            $client->request('GET', '/slothsoft@farah/phpinfo');
-            $source = file_get_contents($client->getCurrentURL());
-            $client->quit();
-            
+            $source = file_get_contents("$sut->uri/slothsoft@farah/phpinfo");
+
             $document = new DOMDocument();
-            $actual = @$document->loadHTML($source);
+            $actual = $document->loadXML($source);
             $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
 
             $xpath = DOMHelper::loadXPath($document);
-            $actual = $xpath->evaluate('string(//title)');
+            $actual = $xpath->evaluate('string(//html:title)');
             $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
         } catch (BrowserDriverNotFoundException $e) {
             $this->markTestSkipped();
