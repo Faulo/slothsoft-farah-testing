@@ -4,16 +4,14 @@ on: [ push ]
 
 jobs:
     run-tests:
-        name: PHP ${{ matrix.php }} / Composer ${{ matrix.composer }}
+        name: PHP ${{ matrix.php }} (${{ matrix.composer }})
         runs-on: ubuntu-latest
-        
         strategy:
             fail-fast: false
             matrix:
                 composer: [ "lowest", "stable" ]
                 php: [ "8.2", "8.3", "8.4", "8.5" ]
                 extensions: [ "ctype curl dom iconv json libxml mbstring pcre phar sockets tokenizer xml xmlwriter xsl zip zlib" ]
-        
         steps:
             -   name: Checkout Repository
                 uses: actions/checkout@v4
