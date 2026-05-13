@@ -37,6 +37,7 @@ jobs:
                 env:
                     COMPOSER_ROOT_VERSION: "dev-main"
                     COMPOSER_CACHE_DIR: /tmp/composer-cache
+                    COMPOSER_AUTH: "{}"
 
             -   name: Run PHPUnit
                 run: vendor/bin/phpunit --log-junit phpunit-${{ matrix.php }}-${{ matrix.composer }}.results.xml
