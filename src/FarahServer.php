@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting;
 
+use Facebook\WebDriver\Exception\PhpWebDriverExceptionInterface;
 use Slothsoft\Core\CLI;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
@@ -133,6 +134,13 @@ class FarahServer {
             ...self::$firefoxExecutables,
             ...self::$chromeExecutables
         ], FileSystem::scanDir($driversDirectory));
+    }
+
+    public function returnClientQuietly(Client $client): void {
+        try {
+            $client->quit();
+        } catch (PhpWebDriverExceptionInterface) {
+        }
     }
 
     private function detectDrivers(string $driversDirectory): bool {

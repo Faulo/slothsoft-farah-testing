@@ -61,14 +61,14 @@ class FarahServerTest extends TestCase {
         $this->assertThat($actual->documentElement->namespaceURI, new IsEqual(DOMHelper::NS_SITEMAP));
     }
 
-    public function test_createClient_andQuit() {
+    public function test_createClient_andReturn() {
         $sut = new FarahServer();
         $sut->start();
 
         try {
             $client = $sut->createClient();
             $client->request('GET', '/slothsoft@farah/phpinfo');
-            $client->quit();
+            $sut->returnClientQuietly($client);
             $actual = $client->ping();
 
             $this->assertThat($actual, new IsFalse());
@@ -104,7 +104,7 @@ class FarahServerTest extends TestCase {
             $client = $sut->createClient();
             $client->request('GET', '/slothsoft@farah/phpinfo');
             $source = $client->getPageSource();
-            $client->quit();
+            $sut->returnClientQuietly($client);
 
             $document = new DOMDocument();
             $actual = $document->loadXML($source);
@@ -136,7 +136,7 @@ if (!node) {
 return node.innerHTML;
 EOT
             );
-            $client->quit();
+            $sut->returnClientQuietly($client);
 
             $this->assertThat($actual, new IsEqual(sprintf('PHP %s - phpinfo()', PHP_VERSION)), "Failed to retrieve <title> from /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
         } catch (BrowserDriverNotFoundException $e) {
