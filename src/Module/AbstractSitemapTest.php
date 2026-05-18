@@ -27,39 +27,39 @@ use Slothsoft\Farah\Sites\Domain;
 use Throwable;
 
 abstract class AbstractSitemapTest extends AbstractTestCase {
-    
+
     private const SCHEMA_URL = 'farah://slothsoft@farah/schema/sitemap/';
-    
+
     abstract protected static function loadSitesAsset(): AssetInterface;
-    
+
     protected function getSitesAsset(): AssetInterface {
         $cache = TestCache::instance(get_class($this));
-        
+
         $sitemap = $cache->retrieve('getSitesAsset', function () {
             return static::loadSitesAsset();
         });
-        
+
         Kernel::setCurrentSitemap($sitemap);
-        
+
         return $sitemap;
     }
-    
+
     protected function getSitesResult(): ResultInterface {
         return $this->getSitesAsset()
             ->lookupExecutable()
             ->lookupXmlResult();
     }
-    
+
     protected function getSitesDocument(): DOMDocument {
         return $this->getSitesResult()
             ->lookupDOMWriter()
             ->toDocument();
     }
-    
+
     protected function getSitesRoot(): DOMElement {
         return $this->getSitesDocument()->documentElement;
     }
-    
+
     protected function getSitesIncludes(): array {
         $ret = [];
         $result = $this->getSitesResult();
@@ -69,7 +69,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->getSitesIncludesCrawl($ret, $url, $document);
         return $ret;
     }
-    
+
     protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document): void {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
@@ -83,25 +83,25 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             }
         }
     }
-    
+
     protected function getDomain(): Domain {
         $cache = TestCache::instance(get_class($this));
-        
+
         return $cache->retrieve('getDomain', function () {
             return Domain::createWithDefaultSitemap();
         });
     }
-    
+
     protected function getDomainDocument(): DOMDocument {
         return $this->getDomain()->getDocument();
     }
-    
+
     public function testHasRootElement(): DOMElement {
         $rootElement = $this->getSitesDocument()->documentElement;
         $this->assertInstanceOf(DOMElement::class, $rootElement);
         return $rootElement;
     }
-    
+
     /**
      *
      * @depends testHasRootElement
@@ -110,7 +110,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertThat($rootElement->namespaceURI, new IsEqual(DOMHelper::NS_FARAH_SITES));
         $this->assertThat($rootElement->localName, new IsEqual(Domain::TAG_DOMAIN));
     }
-    
+
     /**
      *
      * @depends testHasRootElement
@@ -121,7 +121,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertFileExists($path, 'Schema file not found!');
         return $path;
     }
-    
+
     /**
      *
      * @depends testSchemaExists
@@ -132,7 +132,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertNotNull($document);
         return $document;
     }
-    
+
     /**
      *
      * @depends testSchemaIsValidXml
@@ -142,7 +142,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $this->assertSchema($document, $schemaDocument->documentURI);
         return $document;
     }
-    
+
     /**
      *
      * @dataProvider includeProvider
@@ -155,7 +155,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $this->failException($e);
         }
     }
-    
+
     /**
      *
      * @depends      testIncludeExists
@@ -166,10 +166,10 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         $schema = $this->testSchemaExists($document->documentElement);
         $this->assertSchema($document, $schema);
     }
-    
+
     public function includeProvider(): array {
         $cache = TestCache::instance(get_class($this));
-        
+
         return $cache->retrieve('includeProvider', function () {
             $provider = [];
             foreach ($this->getSitesIncludes() as $key => $url) {
@@ -180,7 +180,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             return $provider;
         });
     }
-    
+
     /**
      *
      * @depends      testIncludeExists
@@ -193,24 +193,24 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $this->assertNotEmpty($node->getAttribute('ref'), '<page> ref must not be empty.');
             return;
         }
-        
+
         if ($node->hasAttribute('redirect')) {
             $this->assertFalse($node->hasAttribute('ref'), '<page> must only have one of [ref, redirect, ext].');
             $this->assertFalse($node->hasAttribute('ext'), '<page> must only have one of [ref, redirect, ext].');
             $this->assertNotEmpty($node->getAttribute('redirect'), '<page> redirect must not be empty.');
             return;
         }
-        
+
         if ($node->hasAttribute('ext')) {
             $this->assertFalse($node->hasAttribute('ref'), '<page> must only have one of [ref, redirect, ext].');
             $this->assertFalse($node->hasAttribute('redirect'), '<page> must only have one of [ref, redirect, ext].');
             $this->assertNotEmpty($node->getAttribute('ext'), '<page> ext must not be empty.');
             return;
         }
-        
+
         $this->fail('<page> must have either ref or redirect or ext attribute.' . PHP_EOL . $node->ownerDocument->saveXML($node));
     }
-    
+
     /**
      *
      * @depends      testPageMustHaveOneOfRefOrRedirectOrExt
@@ -222,7 +222,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         if ($node->hasAttribute('ref')) {
             $this->assertEquals($node, $this->getDomain()
                 ->lookupPageNode($path));
-            
+
             $this->getDomain()->setCurrentPageNode($node);
             $url = $this->getDomain()->lookupAssetUrl($node);
             $this->assertAsset($url);
@@ -231,7 +231,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $this->getDomain()->lookupPageNode($path);
         }
     }
-    
+
     private function assertAsset(FarahUrl $url): void {
         try {
             $result = Module::resolveToResult($url);
@@ -240,10 +240,10 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             $this->failException($e);
             return;
         }
-        
+
         $this->assertNotEquals('', $mimeType, "Asset '$url' did not produce a mime type!");
     }
-    
+
     private function loadAsset(FarahUrl $url): ?ResultInterface {
         try {
             $result = Module::resolveToResult($url);
@@ -253,7 +253,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             return null;
         }
     }
-    
+
     /**
      *
      * @dataProvider pageLinkProvider
@@ -261,35 +261,36 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     public function testPageHasValidLink(string $context, string $link): void {
         try {
             $this->assertNotEquals('', $link, 'Link must not be empty');
-            
+
             if (str_starts_with($link, 'mailto:')) {
                 $this->assertMatchesRegularExpression('~^mailto:.+$~', $link);
                 return;
             }
-            
+
             $uri = UriResolver::resolve(new Uri($context), new Uri($link));
-            
+
             if ($uri->getScheme() === 'farah') {
                 $this->assertFileExists((string) $uri);
                 return;
             }
-            
+
             if ($uri->getHost()) {
                 // external links are assumed to be fine
                 return;
             }
-            
+
             $request = MessageFactory::createCustomRequest('GET', $uri);
-            
+
             if (preg_match('~^/[^/]+@[^/]+~', $uri->getPath())) {
                 $requestStrategy = new LookupAssetStrategy();
             } else {
                 $requestStrategy = new LookupPageStrategy();
             }
-            
+
             $url = $requestStrategy->createUrl($request);
             $result = Module::resolveToResult($url);
             if ($id = $uri->getFragment()) {
+                $id = rawurldecode($id);
                 $xpath = DOMHelper::loadXPath($result->lookupDOMWriter()->toDocument());
                 $ids = [];
                 foreach ($xpath->evaluate('//*[@id]') as $node) {
@@ -320,16 +321,16 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             }
         }
     }
-    
+
     private const PAGE_NODE_TAGS = [
         Domain::TAG_DOMAIN,
         Domain::TAG_PAGE,
         Domain::TAG_FILE
     ];
-    
+
     public function pageNodeProvider(): array {
         $cache = TestCache::instance(get_class($this));
-        
+
         return $cache->retrieve('pageNodeProvider', function () {
             $provider = [];
             $document = $this->getDomainDocument();
@@ -344,34 +345,34 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             return $provider;
         });
     }
-    
+
     public function pageLinkProvider(): array {
         $cache = TestCache::instance(get_class($this));
-        
+
         return $cache->retrieve('pageLinkProvider', function () {
             $provider = [];
             $pages = $this->pageNodeProvider();
             $crawler = new LinkCrawler(new Set(array_keys($pages)));
             foreach ($pages as $page => $args) {
                 $node = $args[0];
-                
+
                 if ($node->hasAttribute('ref')) {
                     Module::clearAllCachedAssets();
-                    
+
                     $this->getDomain()
                         ->setCurrentPageNode($node);
-                    
+
                     $url = $this->getDomain()
                         ->lookupAssetUrl($node);
-                    
+
                     try {
                         if (file_exists((string) $url) and $result = $this->loadAsset($url)) {
                             $mime = $result->lookupMimeType();
-                            
+
                             if (MimeTypeDictionary::isXml($mime)) {
                                 $document = $result->lookupDOMWriter()
                                     ->toDocument();
-                                
+
                                 foreach ($crawler->crawlDocument($document) as $reference => $link) {
                                     $provider["$page $reference"] ??= [
                                         $page,
@@ -382,10 +383,10 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                         }
                     } catch (EmptyTransformationException $e) {
                     }
-                    
+
                     $this->getDomain()
                         ->clearCurrentPageNode();
-                    
+
                     Module::clearAllCachedAssets();
                 }
             }

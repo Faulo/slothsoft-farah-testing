@@ -4,7 +4,9 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use DOMDocument;
+use DOMElement;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Core\IO\Writable\Delegates\DOMWriterFromDocumentDelegate;
@@ -34,39 +36,38 @@ use Slothsoft\Farah\Sites\Domain;
  * @see AbstractSitemapTest
  */
 class AbstractSitemapTestTest extends TestCase {
-    
+
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractSitemapTest::class), "Failed to load class 'Slothsoft\Farah\ModuleTests\AbstractSitemapTest'!");
     }
-    
+
     private DOMDocument $sitesDocument;
-    
+
     private function createSuT(): AbstractSitemapTest {
         $siteXML = <<<EOT
-        <?xml version="1.0" encoding="UTF-8"?>
         <domain xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" name="test.slothsoft.net" vendor="slothsoft" module="test"
-        	ref="domain-asset" status-active="" status-public="" sfd:languages="de-de en-us" version="1.1">        
+        	ref="domain-asset" status-active="" status-public="" sfd:languages="de-de en-us" version="1.1">
         	<page name="test-page" ref="page-asset">
         		<file name="test-file" ref="file-asset" />
         	</page>
         </domain>
         EOT;
-        
+
         $this->sitesDocument = new DOMDocument();
         $this->sitesDocument->loadXML($siteXML);
-        
+
         $sitesAsset = $this->createStub(AssetInterface::class);
         Kernel::setCurrentSitemap($sitesAsset);
-        
+
         $sitesBuilder = new DOMWriterResultBuilder(new DOMDocumentDOMWriter($this->sitesDocument));
         $sitesExecutable = new Executable($sitesAsset, FarahUrlArguments::createEmpty(), new ExecutableStrategies($sitesBuilder));
-        
+
         $sitesAsset->method('lookupExecutable')->willReturn($sitesExecutable);
-        
+
         StubSitemapTest::$sitesAsset = $sitesAsset;
-        
+
         TestCache::instance(StubSitemapTest::class)->clear();
-        
+
         $treeLoader = $this->createStub(TreeLoaderStrategyInterface::class);
         $treeLoader->method('loadTree')->willReturnCallback(function (ManifestInterface $context): LeanElement {
             $root = LeanElement::createOneFromArray('assets', [], [
@@ -90,18 +91,18 @@ class AbstractSitemapTestTest extends TestCase {
             $context->normalizeManifestTree($root);
             return $root;
         });
-        
+
         $module = FarahUrlAuthority::createFromVendorAndModule('slothsoft', 'test');
-        
+
         $assetBuilder = new DefaultAssetBuilder($module);
-        
+
         $manifest = new ManifestStrategies($treeLoader, $assetBuilder);
-        
+
         Module::register($module, '.', $manifest);
-        
+
         return new StubSitemapTest();
     }
-    
+
     /**
      *
      * @runInSeparateProcess
@@ -111,16 +112,17 @@ class AbstractSitemapTestTest extends TestCase {
         $dom = new DOMHelper();
         $fragment = $dom->parse($xml);
         $pageNode = $fragment->firstChild;
-        
+        $this->assertInstanceOf(DOMElement::class, $pageNode);
+
         $sut = $this->createSuT();
-        
+
         if (! $isValid) {
             $this->expectException(AssertionFailedError::class);
         }
-        
+
         $sut->testPageMustHaveOneOfRefOrRedirectOrExt($pageNode);
     }
-    
+
     public function pageNodeProvider(): iterable {
         yield 'page ref pass' => [
             '<page ref="/" />',
@@ -151,33 +153,33 @@ class AbstractSitemapTestTest extends TestCase {
             false
         ];
     }
-    
+
     /**
      *
      * @runInSeparateProcess
      */
     public function test_getSitesDocument() {
         $sut = $this->createSuT();
-        
+
         $this->assertEquals($this->sitesDocument, $sut->getSitesDocumentProtected());
     }
-    
+
     /**
      *
      * @runInSeparateProcess
      */
     public function test_pageNodeProvider() {
         $sut = $this->createSuT();
-        
+
         $actual = $sut->pageNodeProvider();
-        
+
         $this->assertEquals([
             '/',
             '/test-page/',
             '/test-page/test-file'
         ], array_keys($actual));
     }
-    
+
     /**
      *
      * @runInSeparateProcess
@@ -187,14 +189,14 @@ class AbstractSitemapTestTest extends TestCase {
         $pageDocument = new DOMDocument();
         $pageDocument->loadXML($assetXML);
         StubExecutableBuilder::$executables[$assetPath] = new DOMWriterResultBuilder(new DOMDocumentDOMWriter($pageDocument));
-        
+
         $sut = $this->createSuT();
-        
+
         $actual = $sut->pageLinkProvider();
-        
+
         $this->assertEquals($assetLinks, $actual);
     }
-    
+
     /**
      *
      * @runInSeparateProcess
@@ -206,19 +208,19 @@ class AbstractSitemapTestTest extends TestCase {
         StubExecutableBuilder::$executables['/page-asset'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
             return new DOMDocument();
         }));
-        
+
         $sut = $this->createSuT();
-        
+
         $actual = $sut->pageLinkProvider();
-        
+
         $this->assertEquals([], $actual);
     }
-    
+
     public function pageAssetAndLinkProvider(): iterable {
         yield 'Skip links that are pages' => [
             '/page-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="">
             	<body>
             		<a href="/" />
             		<a href="/test-page/" />
@@ -228,23 +230,23 @@ class AbstractSitemapTestTest extends TestCase {
             EOT,
             []
         ];
-        
+
         yield 'Use XML namespace' => [
             '/file-asset',
             <<<EOT
-            <html>
-                <img src="." />
+            <html lang="">
+                <img src="." alt=""/>
                 <import href="." />
                 <include schemaLocation="." />
             </html>
             EOT,
             []
         ];
-        
+
         yield 'Find HTML header links' => [
             '/page-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="">
             	<head>
             		<link href="." />
             		<link href="" />
@@ -268,16 +270,16 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Find HTML body elements with required links' => [
             '/page-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="">
             	<body>
             		<a href="." />
             		<a href="" />
-            		<img src="." />
-            		<img src="" />
+            		<img src="." alt="" />
+            		<img src="" alt="" />
             		<iframe src="." />
             		<iframe src="" />
             		<source src="." />
@@ -340,11 +342,11 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Find HTML body elements with optional links' => [
             '/page-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="">
             	<body>
             		<form action="." />
             		<form action="" />
@@ -370,14 +372,14 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Include HTML special URIs' => [
             '/page-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="">
             	<body>
             		<a href="mailto:test@email" />
-            		<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />
+            		<img alt="" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />
             	</body>
             </html>
             EOT,
@@ -392,11 +394,11 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Find XSL links' => [
             '/file-asset',
             <<<EOT
-            <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform">
+            <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" version="1.0">
                 <include href="." />
                 <include href="" />
                 <import href="." />
@@ -422,7 +424,7 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Find XSD links' => [
             '/file-asset',
             <<<EOT
@@ -448,11 +450,11 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Find XInclude links' => [
             '/file-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude">
+            <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" lang="">
                 <xi:include href="." />
                 <xi:include href="" />
             </html>
@@ -468,13 +470,13 @@ class AbstractSitemapTestTest extends TestCase {
                 ]
             ]
         ];
-        
+
         yield 'Find data-* links' => [
             '/domain-asset',
             <<<EOT
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            <html xmlns="http://www.w3.org/1999/xhtml" lang="">
                 <a data-href="." />
-                <img data-src="." />
+                <img data-src="." alt="" />
             </html>
             EOT,
             [
@@ -489,27 +491,27 @@ class AbstractSitemapTestTest extends TestCase {
             ]
         ];
     }
-    
+
     /**
      *
      * @runInSeparateProcess
      */
     public function test_pageLinkProvider_doesNotTouchSitemap() {
         $sut = $this->createSuT();
-        
+
         $expected = file_get_contents(Domain::CURRENT_SITEMAP);
-        
+
         $actual = $this->sitesDocument->saveXML();
-        
+
         $this->assertEquals($expected, $actual, "Setting up test sitemap failed!");
-        
+
         $sut->pageLinkProvider();
-        
+
         $actual = $this->sitesDocument->saveXML();
-        
+
         $this->assertEquals($expected, $actual, "pageLinkProvider changed the sitemap!");
     }
-    
+
     /**
      *
      * @runInSeparateProcess
@@ -517,14 +519,14 @@ class AbstractSitemapTestTest extends TestCase {
      */
     public function test_testPageHasValidLink(string $context, string $link, bool $isValid) {
         $sut = $this->createSuT();
-        
+
         if (! $isValid) {
             $this->expectException(AssertionFailedError::class);
         }
-        
+
         $sut->testPageHasValidLink($context, $link);
     }
-    
+
     public function pageLinkProvider(): iterable {
         yield '/ does exist' => [
             '/',
@@ -607,25 +609,46 @@ class AbstractSitemapTestTest extends TestCase {
             true
         ];
     }
+
+    public function test_testPageHasValidLink_decodesFragments(): void {
+        try {
+            StubExecutableBuilder::$executables['/page-asset'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
+                $doc = new DOMDocument();
+                $doc->loadXML(<<<EOT
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <section id="foo/bar" />
+</document>
+EOT
+                );
+                return $doc;
+            }));
+
+            $sut = $this->createSuT();
+            $sut->testPageHasValidLink('/test-page/', '#foo%2Fbar');
+        } catch (ExpectationFailedException $e) {
+            $this->fail("Should not have thrown: " . PHP_EOL . $e);
+        }
+    }
 }
 
 class StubExecutableBuilder implements ExecutableBuilderStrategyInterface {
-    
+
     public static array $executables = [];
-    
+
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {
         return new ExecutableStrategies(self::$executables[(string) $context->getUrlPath()] ?? new NullResultBuilder());
     }
 }
 
 class StubSitemapTest extends AbstractSitemapTest {
-    
+
     public static AssetInterface $sitesAsset;
-    
+
     protected static function loadSitesAsset(): AssetInterface {
         return self::$sitesAsset;
     }
-    
+
     public function getSitesDocumentProtected(): DOMDocument {
         return $this->getSitesDocument();
     }
