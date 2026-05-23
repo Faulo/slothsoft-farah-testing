@@ -11,6 +11,14 @@ use Slothsoft\Core\IO\FileInfoFactory;
 use Slothsoft\Core\StreamWrapper\StreamWrapperInterface;
 use SplFileInfo;
 
+/**
+ * Compares two files byte-for-byte.
+ *
+ * The expected file is passed to the constructor. The actual value passed to
+ * evaluate() may be a SplFileInfo or a path string. Both files must exist. If
+ * both values resolve to the same real path, the comparison succeeds without
+ * reading the file contents.
+ */
 final class FileEqualsFile extends Constraint {
     
     public const DEFAULT_ROW_LENGTH = 128;

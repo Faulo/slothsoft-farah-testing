@@ -13,6 +13,15 @@ use Slothsoft\Farah\Module\Module;
 use Slothsoft\Farah\Schema\SchemaLocator;
 use SplFileInfo;
 
+/**
+ * Asserts that a DOM document is valid according to an XML schema.
+ *
+ * Accepted inputs are DOMDocument instances, FarahUrl instances, SplFileInfo
+ * instances containing XML, and strings containing XML source. If no schema
+ * location is passed to the constructor, the schema is resolved from the
+ * document itself. Documents without a resolvable schema location are treated
+ * as valid.
+ */
 final class DOMDocumentIsValidAccordingToSchema extends Constraint {
     
     private ?string $schemaLocation;

@@ -9,6 +9,15 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
+/**
+ * Compares DOM nodes by normalizing their XML representation.
+ *
+ * Element and attribute names are compared by namespace URI and local name, not
+ * by namespace prefix. Attribute order is ignored. Text, CDATA, and entity
+ * reference content are compared after whitespace normalization. XML namespace
+ * declaration attributes, comments, doctypes, notation declarations, and entity
+ * declarations are ignored.
+ */
 final class DOMNodeEqualTo extends Constraint {
     
     private DOMNode $expected;
@@ -60,7 +69,7 @@ final class DOMNodeEqualTo extends Constraint {
     }
     
     protected function additionalFailureDescription($other): string {
-        $otherText = self::stringify($other);
+        $otherText = $other instanceof DOMNode ? self::stringify($other) : (string) $other;
         
         return (new Differ(new UnifiedDiffOutputBuilder("--- Expected\n+++ Actual\n")))->diff($this->expectedText, $otherText);
     }

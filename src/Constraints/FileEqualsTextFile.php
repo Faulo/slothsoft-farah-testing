@@ -10,6 +10,14 @@ use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 use Slothsoft\Core\IO\FileInfoFactory;
 use SplFileInfo;
 
+/**
+ * Compares two text files line-by-line.
+ *
+ * The expected file is passed to the constructor. The actual value passed to
+ * evaluate() may be a SplFileInfo or a path string. File contents are read with
+ * PHP's file() function using the constructor's options, which can be used for
+ * text-oriented normalization such as FILE_IGNORE_NEW_LINES.
+ */
 final class FileEqualsTextFile extends Constraint {
     
     private SplFileInfo $file;
