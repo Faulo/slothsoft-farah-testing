@@ -12,20 +12,20 @@ use PHPUnit\Framework\TestCase;
  * @see AbstractModuleTest
  */
 final class AbstractModuleTestTest extends TestCase {
-
+    
     /**
      * @test
      */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractModuleTest::class), "Failed to load class 'Slothsoft\FarahTesting\Module\AbstractModuleTest'!");
     }
-
+    
     /**
      * @test
      */
     public function testAssetHasValidLinkPercentDecodesFragmentId(): void {
         $context = temp_file(__NAMESPACE__);
-
+        
         file_put_contents($context, <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
@@ -33,7 +33,7 @@ final class AbstractModuleTestTest extends TestCase {
 </document>
 XML
         );
-
+        
         try {
             $sut = $this->getMockForAbstractClass(AbstractModuleTest::class);
             $sut->testAssetHasValidLink($context, '#foo%2Fbar');
