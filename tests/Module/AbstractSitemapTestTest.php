@@ -610,6 +610,10 @@ class AbstractSitemapTestTest extends TestCase {
         ];
     }
 
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
     public function test_testPageHasValidLink_decodesFragments(): void {
         try {
             StubExecutableBuilder::$executables['/page-page/'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
