@@ -28,12 +28,12 @@ final class FileEqualsTextFile extends Constraint {
     }
     
     public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
-        if ($this->file === $other) {
-            return true;
-        }
-        
         if (! ($other instanceof SplFileInfo)) {
             $other = FileInfoFactory::createFromPath((string) $other);
+        }
+        
+        if ($this->file === $other) {
+            return true;
         }
         
         $comparatorFactory = ComparatorFactory::getInstance();
@@ -44,7 +44,7 @@ final class FileEqualsTextFile extends Constraint {
                 }
                 
                 if (! $other->isFile()) {
-                    throw new ExpectationFailedException(sprintf("Actual file '%s' does not exist.", $this->file));
+                    throw new ExpectationFailedException(sprintf("Actual file '%s' does not exist.", $other));
                 }
                 
                 $expected = file((string) $this->file, $this->options);

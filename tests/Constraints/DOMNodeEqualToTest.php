@@ -128,6 +128,18 @@ EOT
         $this->assertThat($dom->parse('<data/>'), new DOMNodeEqualTo($dom->parse('<data/>')));
     }
     
+    /**
+     * @test
+     */
+    public function test_evaluate_canReturnFalseInsteadOfThrowing(): void {
+        $dom = new DOMHelper();
+        $sut = new DOMNodeEqualTo($dom->parse('<expected/>'));
+        
+        $actual = $sut->evaluate($dom->parse('<actual/>'), '', true);
+        
+        $this->assertFalse($actual);
+    }
+    
     public static function provideXmlComparisons(): iterable {
         yield 'identical simple element' => [
             '<data a="b"/>',

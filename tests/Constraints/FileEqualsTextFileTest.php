@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting\Constraints;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\IO\FileInfoFactory;
 
@@ -48,5 +49,50 @@ final class FileEqualsTextFileTest extends TestCase {
         $actual = $sut->evaluate($b, '', true);
         
         $this->assertFalse($actual);
+    }
+    
+    /**
+     * @test
+     */
+    public function test_evaluate_returnsFalseWhenExpectedFileDoesNotExist(): void {
+        $expected = FileInfoFactory::createTempFile();
+        $actual = FileInfoFactory::createTempFile();
+        file_put_contents((string) $actual, 'a');
+        
+        $sut = new FileEqualsTextFile($expected);
+        
+        $this->assertFalse($sut->evaluate($actual, '', true));
+    }
+    
+    /**
+     * @test
+     */
+    public function test_evaluate_reportsMissingExpectedFile(): void {
+        $expected = FileInfoFactory::createTempFile();
+        $actual = FileInfoFactory::createTempFile();
+        file_put_contents((string) $actual, 'a');
+        
+        $sut = new FileEqualsTextFile($expected);
+        
+        $this->expectException(ExpectationFailedException::class);
+        $this->expectExceptionMessage(sprintf("Expected file '%s' does not exist.", $expected));
+        
+        $sut->evaluate($actual);
+    }
+    
+    /**
+     * @test
+     */
+    public function test_evaluate_reportsMissingActualFile(): void {
+        $expected = FileInfoFactory::createTempFile();
+        $actual = FileInfoFactory::createTempFile();
+        file_put_contents((string) $expected, 'a');
+        
+        $sut = new FileEqualsTextFile($expected);
+        
+        $this->expectException(ExpectationFailedException::class);
+        $this->expectExceptionMessage(sprintf("Actual file '%s' does not exist.", $actual));
+        
+        $sut->evaluate($actual);
     }
 }
