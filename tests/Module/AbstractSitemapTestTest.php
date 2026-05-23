@@ -612,10 +612,9 @@ class AbstractSitemapTestTest extends TestCase {
 
     public function test_testPageHasValidLink_decodesFragments(): void {
         try {
-            StubExecutableBuilder::$executables['/page-asset'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
+            StubExecutableBuilder::$executables['/page-page/'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
                 $doc = new DOMDocument();
                 $doc->loadXML(<<<EOT
-<?xml version="1.0" encoding="UTF-8"?>
 <document>
     <section id="foo/bar" />
 </document>
