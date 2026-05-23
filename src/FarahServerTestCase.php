@@ -47,7 +47,9 @@ abstract class FarahServerTestCase extends TestCase {
     }
     
     protected function tearDown(): void {
-        static::$server->returnClientQuietly($this->client);
-        unset($this->client);
+        if (isset($this->client)) {
+            static::$server->returnClientQuietly($this->client);
+            unset($this->client);
+        }
     }
 }

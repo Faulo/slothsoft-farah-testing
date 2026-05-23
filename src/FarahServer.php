@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting;
 
 use Facebook\WebDriver\Exception\PhpWebDriverExceptionInterface;
+use LogicException;
 use Slothsoft\Core\CLI;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
@@ -51,6 +52,10 @@ class FarahServer {
     }
     
     public function start(): void {
+        if (isset($this->manager)) {
+            throw new LogicException('FarahServer has already been started.');
+        }
+        
         $documentRoot = realpath(__DIR__ . '/../server');
         $hostname = '127.0.0.1';
         $port = self::findFreePort();
@@ -106,6 +111,10 @@ class FarahServer {
     ];
     
     public function createClient(): Client {
+        if (! isset($this->manager)) {
+            throw new LogicException('FarahServer must be started before creating clients.');
+        }
+        
         $driversDirectory = ServerEnvironment::getCacheDirectory() . DIRECTORY_SEPARATOR . 'bdi-drivers';
         
         $options = [];

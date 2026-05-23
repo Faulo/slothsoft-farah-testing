@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting;
 
 use DOMDocument;
+use LogicException;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsFalse;
 use PHPUnit\Framework\Constraint\StringContains;
@@ -42,6 +43,29 @@ class FarahServerTest extends TestCase {
         $actual = file_get_contents($sut->uri . '/slothsoft@farah/phpinfo');
         
         $this->assertThat($actual, new StringContains(PHP_VERSION));
+    }
+    
+    /**
+     * @test
+     */
+    public function test_start_throwsWhenCalledTwice(): void {
+        $sut = new FarahServer();
+        $sut->start();
+        
+        $this->expectException(LogicException::class);
+        
+        $sut->start();
+    }
+    
+    /**
+     * @test
+     */
+    public function test_createClient_throwsWhenServerHasNotStarted(): void {
+        $sut = new FarahServer();
+        
+        $this->expectException(LogicException::class);
+        
+        $sut->createClient();
     }
     
     /**
