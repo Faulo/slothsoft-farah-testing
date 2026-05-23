@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use DOMDocument;
+use Ds\Set;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\TestCase;
 
@@ -37,6 +38,33 @@ class LinkCrawlerTest extends TestCase {
         }
         
         $this->assertThat($actual, new IsEqual($expected));
+    }
+    
+    /**
+     * @test
+     */
+    public function test_crawl_skipsWhitelistedLinks(): void {
+        $document = new DOMDocument();
+        $document->loadXML(<<<EOT
+<html xmlns="http://www.w3.org/1999/xhtml" lang="">
+    <a href="/known"/>
+    <a href="/unknown"/>
+</html>
+EOT
+        );
+        
+        $sut = new LinkCrawler(new Set([
+            '/known'
+        ]));
+        
+        $actual = [];
+        foreach ($sut->crawlDocument($document) as $key => $value) {
+            $actual[$key] = $value;
+        }
+        
+        $this->assertThat($actual, new IsEqual([
+            "a href '/unknown'" => '/unknown'
+        ]));
     }
     
     public function provideExamples(): iterable {
@@ -110,6 +138,66 @@ EOT,
 EOT,
             [
                 "link href '/link'" => '/link'
+            ]
+        ];
+        
+        yield 'data attribute fallback' => [
+            <<<EOT
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <a data-href="/fallback"/>
+    <img data-src="/image" alt=""/>
+</html>
+EOT,
+            [
+                "a href '/fallback'" => '/fallback',
+                "img src '/image'" => '/image'
+            ]
+        ];
+        
+        yield 'ignore dictionary replacement links' => [
+            <<<EOT
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <a href="/ignored" data-dict-replace="href"/>
+    <a href="/included"/>
+</html>
+EOT,
+            [
+                "a href '/included'" => '/included'
+            ]
+        ];
+        
+        yield 'skip empty optional links' => [
+            <<<EOT
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <script src=""/>
+    <video src=""/>
+    <form action=""/>
+</html>
+EOT,
+            []
+        ];
+        
+        yield 'report empty required links' => [
+            <<<EOT
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <a href=""/>
+    <img src="" alt=""/>
+</html>
+EOT,
+            [
+                "a href ''" => '',
+                "img src ''" => ''
+            ]
+        ];
+        
+        yield 'xinclude links are crawled in other namespaces' => [
+            <<<EOT
+<data xmlns:xi="http://www.w3.org/2001/XInclude">
+    <xi:include href="/include"/>
+</data>
+EOT,
+            [
+                "include href '/include'" => '/include'
             ]
         ];
     }
