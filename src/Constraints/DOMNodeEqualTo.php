@@ -10,7 +10,7 @@ use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
 /**
- * Compares DOM nodes by normalizing their XML representation.
+ * Compares {@see DOMNode} instances by normalizing their XML representation.
  *
  * Element and attribute names are compared by namespace URI and local name, not
  * by namespace prefix. Attribute order is ignored. Text, CDATA, and entity

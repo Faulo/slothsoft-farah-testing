@@ -14,13 +14,13 @@ use Slothsoft\Farah\Schema\SchemaLocator;
 use SplFileInfo;
 
 /**
- * Asserts that a DOM document is valid according to an XML schema.
+ * Asserts that a {@see DOMDocument} is valid with respect to an XML schema.
  *
- * Accepted inputs are DOMDocument instances, FarahUrl instances, SplFileInfo
- * instances containing XML, and strings containing XML source. If no schema
- * location is passed to the constructor, the schema is resolved from the
- * document itself. Documents without a resolvable schema location are treated
- * as valid.
+ * Accepted inputs are {@see DOMDocument} instances, {@see FarahUrl} instances,
+ * {@see SplFileInfo} instances containing XML, and strings containing XML.
+ * If no schema location is passed to the constructor, it is resolved from the
+ * document itself using {@see SchemaLocator}. Documents without a resolvable schema location
+ * are treated as valid.
  */
 final class DOMDocumentIsValidAccordingToSchema extends Constraint {
     
