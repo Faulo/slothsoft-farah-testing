@@ -22,12 +22,18 @@ class FarahServerTestCaseTest extends FarahServerTestCase {
         self::$values['client'] = $this->client;
     }
     
+    /**
+     * @test
+     */
     public function test_setUpServer() {
         $this->assertNotNull(self::$values['server']);
         
         $this->assertThat(self::$values['server'], new IsIdentical(self::$server));
     }
     
+    /**
+     * @test
+     */
     public function test_setUpClient() {
         $this->assertNotNull(self::$values['client']);
         

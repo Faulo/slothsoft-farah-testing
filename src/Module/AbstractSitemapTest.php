@@ -96,6 +96,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         return $this->getDomain()->getDocument();
     }
 
+    /**
+     * @test
+     */
     public function testHasRootElement(): DOMElement {
         $rootElement = $this->getSitesDocument()->documentElement;
         $this->assertInstanceOf(DOMElement::class, $rootElement);
@@ -103,7 +106,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends testHasRootElement
      */
     public function testRootElementIsDomain(DOMElement $rootElement): void {
@@ -112,7 +115,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends testHasRootElement
      */
     public function testSchemaExists(DOMElement $rootElement): string {
@@ -123,7 +126,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends testSchemaExists
      */
     public function testSchemaIsValidXml(string $path): DOMDocument {
@@ -134,7 +137,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends testSchemaIsValidXml
      */
     public function testSitesIsValidAccordingToSchema(DOMDocument $schemaDocument): DOMDocument {
@@ -144,7 +147,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider includeProvider
      */
     public function testIncludeExists(Farahurl $url): void {
@@ -157,7 +160,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends      testIncludeExists
      * @dataProvider includeProvider
      */
@@ -182,7 +185,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends      testIncludeExists
      * @dataProvider pageNodeProvider
      */
@@ -212,7 +215,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends      testPageMustHaveOneOfRefOrRedirectOrExt
      * @dataProvider pageNodeProvider
      * @deprecated
@@ -255,7 +258,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider pageLinkProvider
      */
     public function testPageHasValidLink(string $context, string $link): void {

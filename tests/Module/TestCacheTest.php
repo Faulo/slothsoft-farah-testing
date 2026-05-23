@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 final class TestCacheTest extends TestCase {
     
     /**
-     *
      * @test
      */
     public function testClassExists(): void {

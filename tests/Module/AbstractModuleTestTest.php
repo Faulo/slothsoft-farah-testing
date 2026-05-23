@@ -14,13 +14,15 @@ use PHPUnit\Framework\TestCase;
 final class AbstractModuleTestTest extends TestCase {
 
     /**
-     *
      * @test
      */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractModuleTest::class), "Failed to load class 'Slothsoft\FarahTesting\Module\AbstractModuleTest'!");
     }
 
+    /**
+     * @test
+     */
     public function testAssetHasValidLinkPercentDecodesFragmentId(): void {
         $context = temp_file(__NAMESPACE__);
 

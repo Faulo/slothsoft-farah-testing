@@ -32,6 +32,9 @@ class FarahServerTest extends TestCase {
         error_reporting(self::$reporting);
     }
 
+    /**
+     * @test
+     */
     public function test_start() {
         $sut = new FarahServer();
         $sut->start();
@@ -41,6 +44,9 @@ class FarahServerTest extends TestCase {
         $this->assertThat($actual, new StringContains(PHP_VERSION));
     }
 
+    /**
+     * @test
+     */
     public function test_setModule_isUsedByServer() {
         $sut = new FarahServer();
         $sut->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft-testing', 'test'), realpath('test-files/module'));
@@ -51,6 +57,9 @@ class FarahServerTest extends TestCase {
         $this->assertThat($actual, new StringContains(PHP_VERSION));
     }
 
+    /**
+     * @test
+     */
     public function test_setSitemap_isUsedByServer() {
         $sut = new FarahServer();
         $sut->setSitemap(FarahUrl::createFromReference('farah://slothsoft@farah/example-domain'));
@@ -61,6 +70,9 @@ class FarahServerTest extends TestCase {
         $this->assertThat($actual->documentElement->namespaceURI, new IsEqual(DOMHelper::NS_SITEMAP));
     }
 
+    /**
+     * @test
+     */
     public function test_createClient_andReturn() {
         $sut = new FarahServer();
         $sut->start();
@@ -77,6 +89,9 @@ class FarahServerTest extends TestCase {
         }
     }
 
+    /**
+     * @test
+     */
     public function test_createClient_requestFromServer() {
         $sut = new FarahServer();
         $sut->start();
@@ -96,6 +111,9 @@ class FarahServerTest extends TestCase {
         }
     }
 
+    /**
+     * @test
+     */
     public function test_createClient_requestFromClient() {
         $sut = new FarahServer();
         $sut->start();
@@ -118,6 +136,9 @@ class FarahServerTest extends TestCase {
         }
     }
 
+    /**
+     * @test
+     */
     public function test_createClient_executeScript() {
         $sut = new FarahServer();
         $sut->start();

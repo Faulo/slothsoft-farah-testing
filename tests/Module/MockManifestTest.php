@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 final class MockManifestTest extends TestCase {
     
     /**
-     *
      * @test
      */
     public function testClassExists(): void {

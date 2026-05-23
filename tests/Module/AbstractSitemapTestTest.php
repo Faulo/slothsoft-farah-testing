@@ -37,6 +37,9 @@ use Slothsoft\Farah\Sites\Domain;
  */
 class AbstractSitemapTestTest extends TestCase {
 
+    /**
+     * @test
+     */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractSitemapTest::class), "Failed to load class 'Slothsoft\Farah\ModuleTests\AbstractSitemapTest'!");
     }
@@ -104,7 +107,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      * @dataProvider pageNodeProvider
      */
@@ -155,7 +158,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      */
     public function test_getSitesDocument() {
@@ -165,7 +168,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      */
     public function test_pageNodeProvider() {
@@ -181,7 +184,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      * @dataProvider pageAssetAndLinkProvider
      */
@@ -198,7 +201,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      */
     public function test_pageLinkProvider_canWorkWithEmptyDocuments() {
@@ -493,7 +496,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      */
     public function test_pageLinkProvider_doesNotTouchSitemap() {
@@ -513,7 +516,7 @@ class AbstractSitemapTestTest extends TestCase {
     }
 
     /**
-     *
+     * @test
      * @runInSeparateProcess
      * @dataProvider pageLinkProvider
      */

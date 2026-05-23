@@ -22,7 +22,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     }
     
     /**
-     *
+     * @test
      * @depends testManifestIsValidXml
      * @throws Exception
      */
@@ -35,7 +35,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     }
     
     /**
-     *
+     * @test
      * @depends testSchemaExists
      */
     public function testSchemaIsValidXml(string $path): DOMDocument {
@@ -46,6 +46,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     }
     
     /**
+     * @test
      */
     public function testManifestExists(): string {
         $path = $this->getManifestFile();
@@ -54,7 +55,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     }
     
     /**
-     *
+     * @test
      * @depends testManifestExists
      */
     public function testManifestIsValidXml(string $path): DOMDocument {
@@ -65,7 +66,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     }
     
     /**
-     *
+     * @test
      * @depends testManifestIsValidXml
      * @depends testSchemaIsValidXml
      */

@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 final class TestUtilsTest extends TestCase {
     
     /**
-     *
+     * @test
      * @dataProvider provideDirectories
      */
     public function test_changeWorkingDirectoryToComposerRoot(string $directory): void {

@@ -28,12 +28,15 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         return $this->getManifestRoot()->toDocument();
     }
     
+    /**
+     * @test
+     */
     public function testHasRootElement(): void {
         $this->assertInstanceOf(LeanElement::class, $this->getManifestRoot());
     }
     
     /**
-     *
+     * @test
      * @depends testHasRootElement
      */
     public function testRootElementIsAssets(): void {
@@ -41,7 +44,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     /**
-     *
+     * @test
      * @dataProvider customPathResolverProvider
      */
     public function testClassImplementsPathResolverStrategy(string $className): void {
@@ -55,7 +58,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     /**
-     *
+     * @test
      * @dataProvider customExecutableBuilderProvider
      */
     public function testClassImplementsExecutableBuilderStrategy(string $className): void {
@@ -69,7 +72,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     /**
-     *
+     * @test
      * @dataProvider customInstructionProvider
      */
     public function testClassImplementsInstructionStrategy(string $className): void {
@@ -83,7 +86,7 @@ abstract class AbstractManifestTest extends AbstractTestCase {
     }
     
     /**
-     *
+     * @test
      * @dataProvider customParameterFilterProvider
      */
     public function testClassImplementsParameterFilterStrategy(string $className): void {

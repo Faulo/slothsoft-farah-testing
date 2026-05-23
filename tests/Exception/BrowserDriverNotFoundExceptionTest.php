@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 final class BrowserDriverNotFoundExceptionTest extends TestCase {
     
     /**
-     *
      * @test
      */
     public function testClassExists(): void {

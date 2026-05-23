@@ -13,10 +13,16 @@ use Slothsoft\Core\IO\FileInfoFactory;
  */
 final class FileEqualsFileTest extends TestCase {
     
+    /**
+     * @test
+     */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(FileEqualsFile::class), "Failed to load class 'Slothsoft\FarahTesting\Constraints\FileEqualsFile'!");
     }
     
+    /**
+     * @test
+     */
     public function test_evaluate_true() {
         $a = FileInfoFactory::createTempFile();
         file_put_contents((string) $a, 'a');
@@ -29,6 +35,9 @@ final class FileEqualsFileTest extends TestCase {
         $this->assertTrue($actual);
     }
     
+    /**
+     * @test
+     */
     public function test_evaluate_false() {
         $a = FileInfoFactory::createTempFile();
         file_put_contents((string) $a, 'a');

@@ -17,7 +17,7 @@ use Slothsoft\Core\DOMHelper;
 final class DOMNodeEqualToTest extends TestCase {
     
     /**
-     *
+     * @test
      * @dataProvider provideStringifiedXml
      */
     public function test_stringify(string $xml, string $expected): void {
@@ -101,7 +101,7 @@ EOT
     }
     
     /**
-     *
+     * @test
      * @dataProvider provideXmlComparisons
      */
     public function test_matches(string $expectedXml, string $actualXml, ?string $expectedFailure = null): void {
@@ -120,6 +120,9 @@ EOT
         self::assertThat($actualDoc, $sut);
     }
     
+    /**
+     * @test
+     */
     public function test_diff() {
         $dom = new DOMHelper();
         $this->assertThat($dom->parse('<data/>'), new DOMNodeEqualTo($dom->parse('<data/>')));

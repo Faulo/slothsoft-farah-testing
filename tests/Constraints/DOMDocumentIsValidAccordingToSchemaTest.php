@@ -16,7 +16,7 @@ use Slothsoft\Farah\FarahUrl\FarahUrl;
 final class DOMDocumentIsValidAccordingToSchemaTest extends TestCase {
     
     /**
-     *
+     * @test
      * @dataProvider provideXml
      */
     public function test_matches($input, bool $expected): void {

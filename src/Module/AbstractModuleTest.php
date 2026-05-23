@@ -62,7 +62,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetReferenceProvider
      */
     public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void {
@@ -139,7 +139,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetReferenceUrlProvider
      */
     public function testReferencedModuleExists(FarahUrl $url): void {
@@ -152,7 +152,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetReferenceUrlProvider
      */
     public function testReferencedAssetExists(FarahUrl $url): void {
@@ -167,7 +167,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetReferenceUrlProvider
      */
     public function testReferencedExecutableExists(FarahUrl $url): void {
@@ -182,7 +182,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetReferenceUrlProvider
      */
     public function testReferencedResultExists(FarahUrl $url): void {
@@ -236,7 +236,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetLocalUrlProvider
      */
     public function testLocalAssetExists(FarahUrl $url): void {
@@ -251,7 +251,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetLocalUrlProvider
      */
     public function testLocalExecutableExists(FarahUrl $url): void {
@@ -266,7 +266,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetLocalUrlProvider
      */
     public function testLocalResultExists(FarahUrl $url): void {
@@ -279,7 +279,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @depends      testLocalResultExists
      * @dataProvider assetLocalUrlProvider
      */
@@ -294,7 +294,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     }
 
     /**
-     *
+     * @test
      * @dataProvider assetLinkProvider
      */
     public function testAssetHasValidLink(string $context, string $link): void {

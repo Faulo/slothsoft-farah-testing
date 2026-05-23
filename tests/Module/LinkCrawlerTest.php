@@ -14,12 +14,15 @@ use PHPUnit\Framework\TestCase;
  */
 class LinkCrawlerTest extends TestCase {
     
+    /**
+     * @test
+     */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(LinkCrawler::class), "Failed to load class 'Slothsoft\Farah\ModuleTests\LinkCrawler'!");
     }
     
     /**
-     *
+     * @test
      * @dataProvider provideExamples
      */
     public function test_crawl(string $xml, array $expected): void {
