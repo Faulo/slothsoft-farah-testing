@@ -34,11 +34,6 @@ final class FileEqualsFile extends Constraint {
             $other = FileInfoFactory::createFromPath((string) $other);
         }
         
-        if ($this->file === $other) {
-            return true;
-        }
-        
-        $comparatorFactory = ComparatorFactory::getInstance();
         try {
             try {
                 if (! $this->file->isFile()) {
@@ -48,6 +43,12 @@ final class FileEqualsFile extends Constraint {
                 if (! $other->isFile()) {
                     throw new ExpectationFailedException(sprintf("Actual file '%s' does not exist.", $other));
                 }
+                
+                if ($this->file->getRealPath() === $other->getRealPath()) {
+                    return true;
+                }
+                
+                $comparatorFactory = ComparatorFactory::getInstance();
                 
                 $expected = $this->file->openFile(StreamWrapperInterface::MODE_OPEN_READONLY);
                 $actual = $other->openFile(StreamWrapperInterface::MODE_OPEN_READONLY);
