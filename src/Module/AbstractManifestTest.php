@@ -48,7 +48,6 @@ abstract class AbstractManifestTest extends AbstractTestCase {
      * @dataProvider customPathResolverProvider
      */
     public function testClassImplementsPathResolverStrategy(string $className): void {
-        $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
     }
@@ -62,7 +61,6 @@ abstract class AbstractManifestTest extends AbstractTestCase {
      * @dataProvider customExecutableBuilderProvider
      */
     public function testClassImplementsExecutableBuilderStrategy(string $className): void {
-        $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
     }
@@ -76,7 +74,6 @@ abstract class AbstractManifestTest extends AbstractTestCase {
      * @dataProvider customInstructionProvider
      */
     public function testClassImplementsInstructionStrategy(string $className): void {
-        $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
     }
@@ -90,7 +87,6 @@ abstract class AbstractManifestTest extends AbstractTestCase {
      * @dataProvider customParameterFilterProvider
      */
     public function testClassImplementsParameterFilterStrategy(string $className): void {
-        $this->assertNotNull($className);
         $this->assertTrue(class_exists($className));
         $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
     }

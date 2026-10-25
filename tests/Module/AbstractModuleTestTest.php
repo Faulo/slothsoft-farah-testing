@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting\Module;
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Slothsoft\Farah\FarahUrl\FarahUrl;
 
 /**
  * AbstractModuleTestTest
@@ -18,6 +20,32 @@ final class AbstractModuleTestTest extends TestCase {
      */
     public function testClassExists(): void {
         $this->assertTrue(class_exists(AbstractModuleTest::class), "Failed to load class 'Slothsoft\FarahTesting\Module\AbstractModuleTest'!");
+    }
+    
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function testValidAssetReferenceCountsAsAnAssertion(): void {
+        $sut = $this->getMockForAbstractClass(AbstractModuleTest::class);
+        $context = FarahUrl::createFromReference('farah://slothsoft@farah/');
+        
+        $sut->testAssetReferenceIsValid('schema/', $context);
+        
+        $this->assertSame(1, $sut->getNumAssertions());
+    }
+    
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function testInvalidAssetReferenceStillFails(): void {
+        $sut = $this->getMockForAbstractClass(AbstractModuleTest::class);
+        $context = FarahUrl::createFromReference('farah://slothsoft@farah/');
+        
+        $this->expectException(AssertionFailedError::class);
+        
+        $sut->testAssetReferenceIsValid('https://example.com/', $context);
     }
     
     /**

@@ -46,7 +46,7 @@ class AbstractSitemapTestTest extends TestCase {
     
     private DOMDocument $sitesDocument;
     
-    private function createSuT(): AbstractSitemapTest {
+    private function createSuT(): StubSitemapTest {
         $siteXML = <<<EOT
         <domain xmlns="http://schema.slothsoft.net/farah/sitemap" xmlns:sfd="http://schema.slothsoft.net/farah/dictionary" name="test.slothsoft.net" vendor="slothsoft" module="test"
         	ref="domain-asset" status-active="" status-public="" sfd:languages="de-de en-us" version="1.1">

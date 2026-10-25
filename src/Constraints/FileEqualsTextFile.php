@@ -23,20 +23,21 @@ final class FileEqualsTextFile extends Constraint {
     
     private SplFileInfo $file;
     
+    /** @phpstan-var int-mask<FILE_USE_INCLUDE_PATH, FILE_IGNORE_NEW_LINES, FILE_SKIP_EMPTY_LINES, FILE_NO_DEFAULT_CONTEXT> */
     private int $options;
     
     /**
      *
      * @param SplFileInfo|string $file
-     * @param int $options
-     *            same options as PHP's file() function
+     * @param int $options same options as PHP's file() function
+     * @phpstan-param int-mask<FILE_USE_INCLUDE_PATH, FILE_IGNORE_NEW_LINES, FILE_SKIP_EMPTY_LINES, FILE_NO_DEFAULT_CONTEXT> $options
      */
     public function __construct(SplFileInfo|string $file, int $options = 0) {
         $this->file = $file instanceof SplFileInfo ? $file : FileInfoFactory::createFromPath($file);
         $this->options = $options;
     }
     
-    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
+    public function evaluate($other, string $description = '', bool $returnResult = false): bool {
         if (! ($other instanceof SplFileInfo)) {
             $other = FileInfoFactory::createFromPath((string) $other);
         }

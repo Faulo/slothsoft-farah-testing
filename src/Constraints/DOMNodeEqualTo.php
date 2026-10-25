@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting\Constraints;
 
+use DOMDocument;
 use DOMNode;
+use DOMProcessingInstruction;
 use PHPUnit\Framework\Constraint\Constraint;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Diff\Differ;
@@ -33,7 +35,7 @@ final class DOMNodeEqualTo extends Constraint {
         return 'is XML-equal to the expected node';
     }
     
-    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
+    public function evaluate($other, string $description = '', bool $returnResult = false): bool {
         if ($this->expected === $other) {
             return true;
         }
@@ -82,6 +84,7 @@ final class DOMNodeEqualTo extends Constraint {
         switch ($node->nodeType) {
             case XML_DOCUMENT_NODE:
             case XML_HTML_DOCUMENT_NODE:
+                /** @var DOMDocument $node */
                 if ($node->documentElement) {
                     yield from self::stringifyIterator($node->documentElement, $depth);
                 }
@@ -143,6 +146,7 @@ final class DOMNodeEqualTo extends Constraint {
                 }
                 break;
             case XML_PI_NODE:
+                /** @var DOMProcessingInstruction $node */
                 yield sprintf('%s<?%s %s?>', self::printDepth($depth), $node->target, $node->data);
                 break;
             case XML_COMMENT_NODE:

@@ -37,7 +37,7 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
     /**
      * @throws Exception
      */
-    public function evaluate($other, string $description = '', bool $returnResult = false): ?bool {
+    public function evaluate($other, string $description = '', bool $returnResult = false): bool {
         $document = $this->coerceToDomDocument($other);
         
         if (! $document) {

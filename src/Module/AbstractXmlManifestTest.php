@@ -41,7 +41,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     public function testSchemaIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertNotNull($document);
+        $this->addToAssertionCount(1);
         return $document;
     }
     
@@ -61,7 +61,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
     public function testManifestIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertNotNull($document);
+        $this->addToAssertionCount(1);
         return $document;
     }
     

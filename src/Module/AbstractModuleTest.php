@@ -67,8 +67,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testAssetReferenceIsValid(string $ref, FarahUrl $context): void {
         try {
-            $url = FarahUrl::createFromReference($ref, $context);
-            $this->assertNotNull($url);
+            FarahUrl::createFromReference($ref, $context);
+            $this->addToAssertionCount(1);
         } catch (MalformedUrlException|ProtocolNotSupportedException $e) {
             $this->failException($e);
         }
@@ -145,7 +145,7 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     public function testReferencedModuleExists(FarahUrl $url): void {
         try {
             Module::resolveToManifest($url);
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (ModuleNotFoundException $e) {
             $this->failException($e);
         }
@@ -158,9 +158,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     public function testReferencedAssetExists(FarahUrl $url): void {
         try {
             Module::resolveToAsset($url);
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (AssetPathNotFoundException $e) {
             $this->failException($e);
         }
@@ -173,9 +173,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     public function testReferencedExecutableExists(FarahUrl $url): void {
         try {
             Module::resolveToExecutable($url);
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (ModuleNotFoundException|AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -187,8 +187,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testReferencedResultExists(FarahUrl $url): void {
         try {
-            $result = Module::resolveToResult($url);
-            $this->assertNotNull($result);
+            Module::resolveToResult($url);
+            $this->addToAssertionCount(1);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -241,10 +241,10 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testLocalAssetExists(FarahUrl $url): void {
         try {
-            $asset = Module::resolveToAsset($url);
-            $this->assertNotNull($asset);
+            Module::resolveToAsset($url);
+            $this->addToAssertionCount(1);
         } catch (ModuleNotFoundException $e) {
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (AssetPathNotFoundException $e) {
             $this->failException($e);
         }
@@ -257,9 +257,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
     public function testLocalExecutableExists(FarahUrl $url): void {
         try {
             Module::resolveToExecutable($url);
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (ModuleNotFoundException|AssetPathNotFoundException $e) {
-            $this->assertTrue(true);
+            $this->addToAssertionCount(1);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -271,8 +271,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
      */
     public function testLocalResultExists(FarahUrl $url): void {
         try {
-            $result = Module::resolveToResult($url);
-            $this->assertNotNull($result);
+            Module::resolveToResult($url);
+            $this->addToAssertionCount(1);
         } catch (Throwable $e) {
             $this->failException($e);
         }
@@ -344,10 +344,10 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                 }
             }
         } catch (HttpDownloadException $e) {
-            $stream = $e->getResult()
+            $e->getResult()
                 ->lookupStreamWriter()
                 ->toStream();
-            $this->assertNotNull($stream);
+            $this->addToAssertionCount(1);
         } catch (HttpStatusException $e) {
             $this->assertLessThan(400, $e->getCode(), sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage()));
         }
@@ -367,7 +367,8 @@ abstract class AbstractModuleTest extends AbstractTestCase {
                 $url = $args[0];
                 
                 try {
-                    if (file_exists($asset) and $result = Module::resolveToResult($url)) {
+                    if (file_exists($asset)) {
+                        $result = Module::resolveToResult($url);
                         $mime = $result->lookupMimeType();
                         
                         if (MimeTypeDictionary::isXml($mime)) {

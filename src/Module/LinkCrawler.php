@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Slothsoft\FarahTesting\Module;
 
 use DOMDocument;
+use DOMElement;
 use Ds\Set;
 use Slothsoft\Core\DOMHelper;
 use Slothsoft\Farah\Dictionary;
@@ -219,6 +220,7 @@ final class LinkCrawler {
                 ] = $args;
                 $xpath->registerNamespace('search', $ns);
                 $query = $canAppearAlone ? sprintf('//search:%s', $tag) : sprintf('//search:%s[count(ancestor::*) = count(ancestor::search:*)]', $tag);
+                /** @var DOMElement $linkNode The XPath selects only elements. */
                 foreach ($xpath->query($query) as $linkNode) {
                     if ($linkNode->hasAttribute(Dictionary::XPATH_DICT_ATTR_REPLACE)) {
                         continue;

@@ -132,7 +132,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     public function testSchemaIsValidXml(string $path): DOMDocument {
         $dom = new DOMHelper();
         $document = $dom->load($path);
-        $this->assertNotNull($document);
+        $this->addToAssertionCount(1);
         return $document;
     }
     
@@ -150,7 +150,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @test
      * @dataProvider includeProvider
      */
-    public function testIncludeExists(Farahurl $url): void {
+    public function testIncludeExists(FarahUrl $url): void {
         try {
             $document = Module::resolveToDOMWriter($url)->toDocument();
             $this->assertInstanceOf(DOMElement::class, $document->documentElement);
@@ -164,7 +164,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      * @depends      testIncludeExists
      * @dataProvider includeProvider
      */
-    public function testIncludeIsValidAccordingToSchema(Farahurl $url): void {
+    public function testIncludeIsValidAccordingToSchema(FarahUrl $url): void {
         $document = Module::resolveToDOMWriter($url)->toDocument();
         $schema = $this->testSchemaExists($document->documentElement);
         $this->assertSchema($document, $schema);
@@ -302,10 +302,10 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
                 $this->assertContains($id, $ids, sprintf('Expected page "%s" to have 1 element with ID "%s".%s  IDs found: [%s]', $context, $id, PHP_EOL, implode(', ', $ids)));
             }
         } catch (HttpDownloadException $e) {
-            $stream = $e->getResult()
+            $e->getResult()
                 ->lookupStreamWriter()
                 ->toStream();
-            $this->assertNotNull($stream);
+            $this->addToAssertionCount(1);
         } catch (HttpStatusException $e) {
             $message = sprintf('Resolving link lead to HTTP status "%d":%s%s', $e->getCode(), PHP_EOL, $e->getMessage());
             switch ($e->getCode()) {
