@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.14] - 2026-10-25
+
 ### Added
 
 - Persistent package data caching in GitHub Actions, separated by runner OS and architecture. Jenkins reuses package data in its existing workspaces.

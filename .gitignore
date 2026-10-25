@@ -20,8 +20,8 @@ $RECYCLE.BIN/
 /.reports
 
 # == Slothsoft ==
-/.cache
-/.data
-/.log
-/.farah-*
+.cache
+.data
+.log
+.farah-*
 *.local
