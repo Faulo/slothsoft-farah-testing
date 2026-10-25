@@ -115,7 +115,7 @@ class FarahServer {
             throw new LogicException('FarahServer must be started before creating clients.');
         }
         
-        $driversDirectory = ServerEnvironment::getCacheDirectory() . DIRECTORY_SEPARATOR . 'bdi-drivers';
+        $driversDirectory = ServerEnvironment::getDataDirectory() . DIRECTORY_SEPARATOR . 'farah-testing' . DIRECTORY_SEPARATOR . 'bdi-drivers';
         
         $options = [];
         $options['port'] = self::findFreePort();

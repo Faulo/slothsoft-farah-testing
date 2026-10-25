@@ -17,7 +17,11 @@ $RECYCLE.BIN/
 
 # == PHPUnit ==
 /.phpunit.result.cache
+/.reports
 
 # == Slothsoft ==
+/.cache
+/.data
+/.log
 /.farah-*
 *.local
