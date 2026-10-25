@@ -19,13 +19,13 @@ final class BrowserDriverStorageTest extends TestCase {
      * @runInSeparateProcess
      */
     public function test_reusesDataDirectoryDriverAfterCacheDirectoryChanges(string $driver, string $cachedDriver, string $managerClass): void {
-        $dataDirectory = temp_dir(self::class);
+        ServerEnvironment::setDataDirectory(temp_dir(self::class));
+        $dataDirectory = ServerEnvironment::getDataDirectory();
         $driversDirectory = $dataDirectory . DIRECTORY_SEPARATOR . 'farah-testing' . DIRECTORY_SEPARATOR . 'bdi-drivers';
         mkdir($driversDirectory, 0777, true);
         $suffix = PHP_OS_FAMILY === 'Windows' ? '.exe' : '';
         $driverFile = $driversDirectory . DIRECTORY_SEPARATOR . $driver . $suffix;
         file_put_contents($driverFile, '');
-        ServerEnvironment::setDataDirectory($dataDirectory);
         
         for ($i = 0; $i < 2; $i++) {
             $cacheDirectory = temp_dir(self::class);
