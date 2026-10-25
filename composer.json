@@ -14,7 +14,7 @@
         "ext-dom": "*",
         "ext-libxml": "*",
         "ext-sockets": "*",
-        "slothsoft/core": "^1.14.28",
+        "slothsoft/core": "^1.15.0",
         "slothsoft/farah": "^1.29.6",
         "symfony/browser-kit": "^7.4.21",
         "symfony/panther": "^2.2.0",
