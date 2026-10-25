@@ -78,6 +78,7 @@
       <sourceFolder url="file://$MODULE_DIR$/.farah-vendor/symfony/service-contracts/" isTestSource="false" packagePrefix="Symfony\Contracts\Service\" />
       <sourceFolder url="file://$MODULE_DIR$/.farah-vendor/symfony/var-dumper/" isTestSource="false" packagePrefix="Symfony\Component\VarDumper\" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="Slothsoft\FarahTesting\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Slothsoft\FarahTesting\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dbrekelmans/bdi" />
