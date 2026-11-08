@@ -35,7 +35,7 @@ final class DOMNodeEqualToTest extends TestCase {
             $this->assertSame(DOMNodeEqualTo::stringify($actual), $comparison->getActualAsString());
             $this->assertStringContainsString('-<expected', $comparison->getDiff());
             $this->assertStringContainsString('+<actual', $comparison->getDiff());
-            $this->assertStringStartsWith('XML comparison' . PHP_EOL . 'Failed asserting', $e->getMessage());
+            $this->assertStringStartsWith("XML comparison\nFailed asserting", $e->getMessage());
         }
     }
     

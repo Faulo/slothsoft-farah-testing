@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Exclude Symfony PHP 8.3 polyfill versions below 1.30 to avoid PHP 8.4 deprecations in isolated Windows tests.
+- Match PHPUnit failure-message line endings consistently on Linux and Windows.
 - Report unreadable text comparison files as assertion failures, and report server setup, XPath, and whitespace normalization failures explicitly.
 - Validate XML node types during comparison and select comparison failures using the running PHPUnit signature, including PHAR execution.
 - Complete type annotations for constraints, test helpers, and data providers; report missing XML roots and schema URIs as assertion failures.

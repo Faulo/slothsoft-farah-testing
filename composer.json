@@ -23,6 +23,9 @@
         "php-webdriver/webdriver": "^1.16.0",
         "phpunit/phpunit": "~9.6.31"
     },
+    "conflict": {
+        "symfony/polyfill-php83": "<1.30"
+    },
     "autoload": {
         "psr-4": {
             "Slothsoft\\FarahTesting\\": "src/"
