@@ -5,6 +5,7 @@ namespace Slothsoft\FarahTesting;
 
 use Facebook\WebDriver\Exception\PhpWebDriverExceptionInterface;
 use LogicException;
+use RuntimeException;
 use Slothsoft\Core\CLI;
 use Slothsoft\Core\FileSystem;
 use Slothsoft\Core\ServerEnvironment;
@@ -21,15 +22,23 @@ class FarahServer {
     private static function findFreePort(): int {
         $addr = '';
         $port = 0;
-        $sock = socket_create_listen($port);
-        socket_getsockname($sock, $addr, $port);
-        socket_close($sock);
+        $sock = @socket_create_listen($port);
+        if ($sock === false) {
+            throw new RuntimeException('Failed to create a listening socket: ' . socket_strerror(socket_last_error()));
+        }
+        try {
+            if (! @socket_getsockname($sock, $addr, $port) or $port === 0) {
+                throw new RuntimeException('Failed to determine a free port: ' . socket_strerror(socket_last_error($sock)));
+            }
+        } finally {
+            socket_close($sock);
+        }
         
         return $port;
     }
     
     /**
-     * @var array<string, string|false>
+     * @var array<string, string>
      */
     private array $env = [];
     
@@ -45,9 +54,14 @@ class FarahServer {
             throw new FileNotFoundException(new SplFileInfo($assetsDirectory));
         }
         
+        $manifestDirectory = realpath($assetsDirectory);
+        if ($manifestDirectory === false) {
+            throw new FileNotFoundException(new SplFileInfo($assetsDirectory));
+        }
+        
         $this->env['FARAH_MODULE_VENDOR'] = $module->getVendor();
         $this->env['FARAH_MODULE_NAME'] = $module->getModule();
-        $this->env['FARAH_MODULE_MANIFEST'] = realpath($assetsDirectory);
+        $this->env['FARAH_MODULE_MANIFEST'] = $manifestDirectory;
     }
     
     public function setSitemap(FarahUrl $url): void {
@@ -60,11 +74,18 @@ class FarahServer {
         }
         
         $documentRoot = realpath(__DIR__ . '/../server');
+        if ($documentRoot === false) {
+            throw new RuntimeException('Failed to resolve the Farah server document root.');
+        }
+        $autoload = realpath('vendor/autoload.php');
+        if ($autoload === false) {
+            throw new RuntimeException('Failed to resolve vendor/autoload.php from the current working directory.');
+        }
         $hostname = '127.0.0.1';
         $port = self::findFreePort();
         $router = '';
         $readinessPath = '';
-        $this->env['FARAH_AUTOLOAD'] = realpath('vendor/autoload.php');
+        $this->env['FARAH_AUTOLOAD'] = $autoload;
         
         $this->uri = sprintf('http://%s:%d', $hostname, $port);
         

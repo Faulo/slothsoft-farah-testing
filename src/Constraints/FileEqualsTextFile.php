@@ -58,8 +58,14 @@ final class FileEqualsTextFile extends Constraint {
                 
                 $comparatorFactory = ComparatorFactory::getInstance();
                 
-                $expected = file((string) $this->file, $this->options);
-                $actual = file((string) $other, $this->options);
+                $expected = @file((string) $this->file, $this->options);
+                if ($expected === false) {
+                    throw new ExpectationFailedException(sprintf("Expected file '%s' could not be read.", $this->file));
+                }
+                $actual = @file((string) $other, $this->options);
+                if ($actual === false) {
+                    throw new ExpectationFailedException(sprintf("Actual file '%s' could not be read.", $other));
+                }
                 
                 $expectedSize = count($expected);
                 

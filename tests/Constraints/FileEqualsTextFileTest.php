@@ -6,6 +6,7 @@ namespace Slothsoft\FarahTesting\Constraints;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Slothsoft\Core\IO\FileInfoFactory;
+use SplFileInfo;
 
 /**
  * FileEqualsTextFileTest
@@ -13,6 +14,44 @@ use Slothsoft\Core\IO\FileInfoFactory;
  * @see FileEqualsTextFile
  */
 final class FileEqualsTextFileTest extends TestCase {
+    
+    /**
+     * @dataProvider unreadableFileProvider
+     */
+    public function test_evaluate_handlesFilesDisappearingBeforeRead(bool $expectedUnreadable, bool $returnResult): void {
+        $existing = FileInfoFactory::createTempFile();
+        file_put_contents((string) $existing, 'content');
+        $missing = FileInfoFactory::createTempFile();
+        // Model a file disappearing between isFile() and file(), without relying
+        // on OS permissions (the DDEV test user may have elevated privileges).
+        $stale = new class((string) $missing) extends SplFileInfo {
+            public function isFile(): bool {
+                return true;
+            }
+            
+            public function getRealPath(): string {
+                return $this->getPathname();
+            }
+        };
+        $expected = $expectedUnreadable ? $stale : $existing;
+        $actual = $expectedUnreadable ? $existing : $stale;
+        $sut = new FileEqualsTextFile($expected);
+        
+        if (! $returnResult) {
+            $this->expectException(ExpectationFailedException::class);
+            $this->expectExceptionMessage(sprintf("%s file '%s' could not be read.", $expectedUnreadable ? 'Expected' : 'Actual', $stale));
+        }
+        $result = $sut->evaluate($actual, '', $returnResult);
+        $this->assertFalse($result);
+    }
+    
+    /** @return iterable<string, array{bool, bool}> */
+    public function unreadableFileProvider(): iterable {
+        yield 'expected, boolean' => [true, true];
+        yield 'actual, boolean' => [false, true];
+        yield 'expected, exception' => [true, false];
+        yield 'actual, exception' => [false, false];
+    }
     
     /**
      * @test

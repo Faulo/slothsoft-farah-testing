@@ -16,6 +16,42 @@ use Slothsoft\Core\DOMHelper;
  */
 final class DOMNodeEqualToTest extends TestCase {
     
+    public function test_failureIncludesComparisonValuesAndDiff(): void {
+        $expected = new DOMDocument();
+        $expected->loadXML('<expected/>');
+        $actual = new DOMDocument();
+        $actual->loadXML('<actual/>');
+        $sut = new DOMNodeEqualTo($expected);
+        
+        try {
+            $sut->evaluate($actual, 'XML comparison');
+            $this->fail('Expected the XML comparison to fail.');
+        } catch (ExpectationFailedException $e) {
+            $comparison = $e->getComparisonFailure();
+            $this->assertNotNull($comparison);
+            $this->assertSame($expected, $comparison->getExpected());
+            $this->assertSame($actual, $comparison->getActual());
+            $this->assertSame(DOMNodeEqualTo::stringify($expected), $comparison->getExpectedAsString());
+            $this->assertSame(DOMNodeEqualTo::stringify($actual), $comparison->getActualAsString());
+            $this->assertStringContainsString('-<expected', $comparison->getDiff());
+            $this->assertStringContainsString('+<actual', $comparison->getDiff());
+            $this->assertStringStartsWith('XML comparison' . PHP_EOL . 'Failed asserting', $e->getMessage());
+        }
+    }
+    
+    /** @throws \DOMException */
+    public function test_stringifyFragmentAndStandaloneAttribute(): void {
+        $document = new DOMDocument();
+        $fragment = $document->createDocumentFragment();
+        $fragment->appendXML('<first/><second/>');
+        $this->assertSame("<first\n >\n<second\n >", DOMNodeEqualTo::stringify($fragment));
+        $document->appendChild($document->createElement('root'));
+        $attribute = $document->createAttributeNS('urn:test', 'test:value');
+        $attribute->value = 'content';
+        $this->assertSame('urn:test value="content"', DOMNodeEqualTo::stringify($attribute));
+        $this->assertSame('', DOMNodeEqualTo::stringify(new DOMDocument()));
+    }
+    
     /**
      * @test
      * @dataProvider provideStringifiedXml

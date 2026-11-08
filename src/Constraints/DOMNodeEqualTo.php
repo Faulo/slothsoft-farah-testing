@@ -3,11 +3,17 @@ declare(strict_types = 1);
 
 namespace Slothsoft\FarahTesting\Constraints;
 
+use DOMAttr;
 use DOMDocument;
+use DOMDocumentFragment;
+use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
+use LogicException;
 use PHPUnit\Framework\Constraint\Constraint;
-use SebastianBergmann\Comparator\ComparisonFailure;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionNamedType;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 
@@ -50,20 +56,25 @@ final class DOMNodeEqualTo extends Constraint {
             return false;
         }
         
-        $this->fail($other, $description, $this->createComparison($other, $otherText));
+        $this->failWithComparison($other, $description, $otherText);
     }
     
-    private function createComparison(mixed $other, string $otherText): object {
-        foreach ([
-                     'PHPUnitPHAR\SebastianBergmann\Comparator\ComparisonFailure',
-                     'SebastianBergmann\Comparator\ComparisonFailure'
-                 ] as $className) {
-            if (class_exists($className)) {
-                return new $className($this->expected, $other, $this->expectedText, $otherText);
+    private function failWithComparison(mixed $other, string $description, string $otherText): never {
+        // PHPUnit's PHAR scopes its comparator classes. Use the type required by
+        // the running Constraint, even when Composer's comparator is also loaded.
+        try {
+            $fail = new ReflectionMethod(Constraint::class, 'fail');
+            $type = $fail->getParameters()[2]->getType();
+            if (! $type instanceof ReflectionNamedType or $type->isBuiltin()) {
+                throw new LogicException('Cannot determine PHPUnit comparison failure class.');
             }
+            $className = $type->getName();
+            $comparison = new $className($this->expected, $other, $this->expectedText, $otherText);
+            $fail->invoke($this, $other, $description, $comparison);
+        } catch (ReflectionException $e) {
+            throw new LogicException('Failed to invoke PHPUnit comparison failure.', 0, $e);
         }
-        
-        return new ComparisonFailure($this->expected, $other, $this->expectedText, $otherText);
+        throw new LogicException('PHPUnit Constraint::fail() unexpectedly returned.');
     }
     
     protected function failureDescription($other): string {
@@ -84,20 +95,18 @@ final class DOMNodeEqualTo extends Constraint {
      * @return iterable<string>
      */
     private static function stringifyIterator(DOMNode $node, int $depth = 0): iterable {
-        switch ($node->nodeType) {
-            case XML_DOCUMENT_NODE:
-            case XML_HTML_DOCUMENT_NODE:
-                /** @var DOMDocument $node */
+        switch (true) {
+            case $node instanceof DOMDocument:
                 if ($node->documentElement) {
                     yield from self::stringifyIterator($node->documentElement, $depth);
                 }
                 break;
-            case XML_DOCUMENT_FRAG_NODE:
+            case $node instanceof DOMDocumentFragment:
                 foreach ($node->childNodes as $child) {
                     yield from self::stringifyIterator($child, $depth);
                 }
                 break;
-            case XML_ELEMENT_NODE:
+            case $node instanceof DOMElement:
                 yield sprintf('%s<%s', self::printDepth($depth), self::printName($node));
                 $depth++;
                 
@@ -137,32 +146,29 @@ final class DOMNodeEqualTo extends Constraint {
                     yield sprintf('%s%s', self::printDepth($depth), json_encode($buffer));
                 }
                 break;
-            case XML_ATTRIBUTE_NODE:
+            case $node instanceof DOMAttr:
                 yield sprintf('%s%s=%s', self::printDepth($depth), self::printName($node), json_encode($node->nodeValue));
                 break;
-            case XML_TEXT_NODE:
-            case XML_CDATA_SECTION_NODE:
-            case XML_ENTITY_REF_NODE:
+            case $node->nodeType === XML_TEXT_NODE:
+            case $node->nodeType === XML_CDATA_SECTION_NODE:
+            case $node->nodeType === XML_ENTITY_REF_NODE:
                 $text = self::normalizeSpace($node->nodeValue);
                 if ($text !== '') {
                     yield sprintf('%s%s', self::printDepth($depth), json_encode($text));
                 }
                 break;
-            case XML_PI_NODE:
-                /** @var DOMProcessingInstruction $node */
+            case $node instanceof DOMProcessingInstruction:
                 yield sprintf('%s<?%s %s?>', self::printDepth($depth), $node->target, $node->data);
                 break;
-            case XML_COMMENT_NODE:
-            case XML_DOCUMENT_TYPE_NODE:
-            case XML_NOTATION_NODE:
-            case XML_ENTITY_DECL_NODE:
-            case XML_ENTITY_NODE:
             default:
                 break;
         }
     }
     
-    private static function printName(DOMNode $node): string {
+    private static function printName(DOMElement|DOMAttr $node): string {
+        if ($node->localName === null) {
+            throw new LogicException('XML elements and attributes must have a local name.');
+        }
         return $node->namespaceURI ? "$node->namespaceURI $node->localName" : $node->localName;
     }
     
@@ -173,7 +179,9 @@ final class DOMNodeEqualTo extends Constraint {
     private static function normalizeSpace(?string $text): string {
         $text = (string) $text;
         $text = preg_replace('~[ \t\r\n]+~', ' ', $text);
-        $text = trim($text, ' ');
-        return $text;
+        if ($text === null) {
+            throw new LogicException('Failed to normalize XML whitespace: ' . preg_last_error_msg());
+        }
+        return trim($text, ' ');
     }
 }

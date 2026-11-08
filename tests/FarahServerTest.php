@@ -5,6 +5,7 @@ namespace Slothsoft\FarahTesting;
 
 use DOMDocument;
 use LogicException;
+use RuntimeException;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsFalse;
 use PHPUnit\Framework\Constraint\StringContains;
@@ -31,6 +32,46 @@ class FarahServerTest extends TestCase {
     
     public static function tearDownAfterClass(): void {
         error_reporting(self::$reporting);
+    }
+    
+    /**
+     * @runInSeparateProcess
+     * @throws \Exception
+     */
+    public function test_start_reportsMissingAutoloader(): void {
+        $directory = getcwd();
+        $this->assertNotFalse($directory);
+        chdir(temp_dir(self::class));
+        try {
+            $sut = new FarahServer();
+            $this->expectException(RuntimeException::class);
+            $this->expectExceptionMessage('Failed to resolve vendor/autoload.php');
+            $sut->start();
+        } finally {
+            chdir($directory);
+        }
+    }
+    
+    /**
+     * @runInSeparateProcess
+     */
+    public function test_start_reportsSocketCreationFailure(): void {
+        require __DIR__ . '/../test-files/fail-socket-create.php';
+        $sut = new FarahServer();
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Failed to create a listening socket');
+        $sut->start();
+    }
+    
+    /**
+     * @runInSeparateProcess
+     */
+    public function test_start_reportsSocketNameFailure(): void {
+        require __DIR__ . '/../test-files/fail-socket-name.php';
+        $sut = new FarahServer();
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Failed to determine a free port');
+        $sut->start();
     }
     
     /**

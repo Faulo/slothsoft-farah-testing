@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.15] - 2026-11-08
+
 ### Fixed
 
+- Report unreadable text comparison files as assertion failures, and report server setup, XPath, and whitespace normalization failures explicitly.
+- Validate XML node types during comparison and select comparison failures using the running PHPUnit signature, including PHAR execution.
 - Complete type annotations for constraints, test helpers, and data providers; report missing XML roots and schema URIs as assertion failures.
 - Handle unresolved working directories while locating the Composer root.
 
@@ -259,7 +263,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FarahServer` for local HTTP integration tests with Firefox or Chrome through Panther and automatic BDI driver installation.
 - Module test caching and a mock manifest implementation.
 
-[Unreleased]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.13...HEAD
+[Unreleased]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.15...HEAD
+[1.3.15]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.14...1.3.15
+[1.3.14]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.13...1.3.14
 [1.3.13]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.12...1.3.13
 [1.3.12]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.11...1.3.12
 [1.3.11]: https://github.com/Faulo/slothsoft-farah-testing/compare/1.3.10...1.3.11
