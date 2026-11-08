@@ -14,6 +14,7 @@ use Symfony\Component\Process\Process;
 final class BrowserDriverStorageTest extends TestCase {
     
     /**
+     * @param class-string $managerClass
      * @throws Exception
      * @dataProvider browserProvider
      * @runInSeparateProcess
@@ -50,6 +51,7 @@ final class BrowserDriverStorageTest extends TestCase {
         }
     }
     
+    /** @return iterable<string, array{string, string, class-string}> */
     public function browserProvider(): iterable {
         yield 'Firefox' => ['geckodriver', 'chromedriver', FirefoxManager::class];
         yield 'Chrome' => ['chromedriver', 'geckodriver', ChromeManager::class];

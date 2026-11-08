@@ -5,6 +5,9 @@ namespace Slothsoft\FarahTesting\Module;
 
 final class TestCache {
     
+    /**
+     * @var array<string, self>
+     */
     private static array $caches = [];
     
     public static function instance(string $key): TestCache {
@@ -14,8 +17,16 @@ final class TestCache {
     private function __construct() {
     }
     
+    /**
+     * @var array<string, mixed>
+     */
     private array $cache = [];
     
+    /**
+     * @template T
+     * @param callable(): T $generator
+     * @return T
+     */
     public function retrieve(string $key, callable $generator) {
         return $this->cache[$key] ??= $generator();
     }

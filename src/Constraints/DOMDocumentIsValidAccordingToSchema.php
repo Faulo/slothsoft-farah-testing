@@ -37,7 +37,7 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
     /**
      * @throws Exception
      */
-    public function evaluate($other, string $description = '', bool $returnResult = false): bool {
+    public function evaluate(mixed $other, string $description = '', bool $returnResult = false): bool {
         $document = $this->coerceToDomDocument($other);
         
         if (! $document) {
@@ -78,7 +78,7 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
         throw new ExpectationFailedException(trim($description . "\n" . sprintf('Failed asserting that %s.', $this->toString())), $failure);
     }
     
-    private function coerceToDomDocument($other): ?DOMDocument {
+    private function coerceToDomDocument(mixed $other): ?DOMDocument {
         if ($other instanceof DOMDocument) {
             return $other;
         }
@@ -96,6 +96,9 @@ final class DOMDocumentIsValidAccordingToSchema extends Constraint {
         return null;
     }
     
+    /**
+     * @param list<\LibXMLError> $errors
+     */
     private function formatLibxmlErrors(array $errors, string $schemaLocation): string {
         if (! $errors) {
             return 'Unknown validation error (no libxml errors captured).';

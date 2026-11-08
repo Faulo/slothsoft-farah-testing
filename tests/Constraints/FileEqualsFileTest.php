@@ -24,7 +24,7 @@ final class FileEqualsFileTest extends TestCase {
     /**
      * @test
      */
-    public function test_evaluate_true() {
+    public function test_evaluate_true(): void {
         $a = FileInfoFactory::createTempFile();
         file_put_contents((string) $a, 'a');
         $b = FileInfoFactory::createTempFile();
@@ -39,7 +39,7 @@ final class FileEqualsFileTest extends TestCase {
     /**
      * @test
      */
-    public function test_evaluate_false() {
+    public function test_evaluate_false(): void {
         $a = FileInfoFactory::createTempFile();
         file_put_contents((string) $a, 'a');
         $b = FileInfoFactory::createTempFile();

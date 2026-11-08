@@ -15,17 +15,20 @@ final class TestUtils {
      * @throws Exception
      */
     public static function changeWorkingDirectoryToComposerRoot(): void {
-        if (self::isComposerDirectory(getcwd())) {
+        $directory = getcwd();
+        if ($directory !== false and self::isComposerDirectory($directory)) {
             return;
         }
         
-        if (self::isComposerDirectory(self::$composerRootFromProject)) {
-            chdir(realpath(self::$composerRootFromProject));
+        $directory = realpath(self::$composerRootFromProject);
+        if ($directory !== false and self::isComposerDirectory($directory)) {
+            chdir($directory);
             return;
         }
         
-        if (self::isComposerDirectory(self::$composerRootFromPackage)) {
-            chdir(realpath(self::$composerRootFromPackage));
+        $directory = realpath(self::$composerRootFromPackage);
+        if ($directory !== false and self::isComposerDirectory($directory)) {
+            chdir($directory);
             return;
         }
         

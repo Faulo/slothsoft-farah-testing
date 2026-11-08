@@ -126,6 +126,7 @@ class AbstractSitemapTestTest extends TestCase {
         $sut->testPageMustHaveOneOfRefOrRedirectOrExt($pageNode);
     }
     
+    /** @return iterable<string, array{string, bool}> */
     public function pageNodeProvider(): iterable {
         yield 'page ref pass' => [
             '<page ref="/" />',
@@ -161,7 +162,7 @@ class AbstractSitemapTestTest extends TestCase {
      * @test
      * @runInSeparateProcess
      */
-    public function test_getSitesDocument() {
+    public function test_getSitesDocument(): void {
         $sut = $this->createSuT();
         
         $this->assertEquals($this->sitesDocument, $sut->getSitesDocumentProtected());
@@ -171,7 +172,7 @@ class AbstractSitemapTestTest extends TestCase {
      * @test
      * @runInSeparateProcess
      */
-    public function test_pageNodeProvider() {
+    public function test_pageNodeProvider(): void {
         $sut = $this->createSuT();
         
         $actual = $sut->pageNodeProvider();
@@ -186,9 +187,10 @@ class AbstractSitemapTestTest extends TestCase {
     /**
      * @test
      * @runInSeparateProcess
+     * @param array<string, array{string, string}> $assetLinks
      * @dataProvider pageAssetAndLinkProvider
      */
-    public function test_pageLinkProvider(string $assetPath, string $assetXML, array $assetLinks) {
+    public function test_pageLinkProvider(string $assetPath, string $assetXML, array $assetLinks): void {
         $pageDocument = new DOMDocument();
         $pageDocument->loadXML($assetXML);
         StubExecutableBuilder::$executables[$assetPath] = new DOMWriterResultBuilder(new DOMDocumentDOMWriter($pageDocument));
@@ -204,7 +206,7 @@ class AbstractSitemapTestTest extends TestCase {
      * @test
      * @runInSeparateProcess
      */
-    public function test_pageLinkProvider_canWorkWithEmptyDocuments() {
+    public function test_pageLinkProvider_canWorkWithEmptyDocuments(): void {
         StubExecutableBuilder::$executables['/domain-asset'] = new DOMWriterResultBuilder(new DOMWriterFromDocumentDelegate(function (): DOMDocument {
             throw new EmptyTransformationException('/domain-asset');
         }));
@@ -219,6 +221,7 @@ class AbstractSitemapTestTest extends TestCase {
         $this->assertEquals([], $actual);
     }
     
+    /** @return iterable<string, array{string, string, array<string, array{string, string}>}> */
     public function pageAssetAndLinkProvider(): iterable {
         yield 'Skip links that are pages' => [
             '/page-asset',
@@ -499,7 +502,7 @@ class AbstractSitemapTestTest extends TestCase {
      * @test
      * @runInSeparateProcess
      */
-    public function test_pageLinkProvider_doesNotTouchSitemap() {
+    public function test_pageLinkProvider_doesNotTouchSitemap(): void {
         $sut = $this->createSuT();
         
         $expected = file_get_contents(Domain::CURRENT_SITEMAP);
@@ -520,7 +523,7 @@ class AbstractSitemapTestTest extends TestCase {
      * @runInSeparateProcess
      * @dataProvider pageLinkProvider
      */
-    public function test_testPageHasValidLink(string $context, string $link, bool $isValid) {
+    public function test_testPageHasValidLink(string $context, string $link, bool $isValid): void {
         $sut = $this->createSuT();
         
         if (! $isValid) {
@@ -530,6 +533,7 @@ class AbstractSitemapTestTest extends TestCase {
         $sut->testPageHasValidLink($context, $link);
     }
     
+    /** @return iterable<string, array{string, string, bool}> */
     public function pageLinkProvider(): iterable {
         yield '/ does exist' => [
             '/',
@@ -640,6 +644,7 @@ EOT
 
 class StubExecutableBuilder implements ExecutableBuilderStrategyInterface {
     
+    /** @var array<string, \Slothsoft\Farah\Module\Executable\ResultBuilderStrategy\ResultBuilderStrategyInterface> */
     public static array $executables = [];
     
     public function buildExecutableStrategies(AssetInterface $context, FarahUrlArguments $args): ExecutableStrategies {

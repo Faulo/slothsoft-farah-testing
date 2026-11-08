@@ -53,10 +53,12 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         return $this->getManifestMethod('getRootElement')->toDocument();
     }
     
+    /** @return mixed */
     protected function getManifestProperty(string $name) {
         return $this->getObjectProperty($this->getManifest(), $name);
     }
     
+    /** @return mixed */
     protected function getManifestMethod(string $name) {
         return $this->getObjectMethod($this->getManifest(), $name);
     }
@@ -74,6 +76,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
     }
     
+    /**
+     * @return array<array-key, array{string, FarahUrl}>
+     */
     public function assetReferenceProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
@@ -90,6 +95,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         });
     }
     
+    /**
+     * @return array<array-key, array{FarahUrl}>
+     */
     public function assetReferenceUrlProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
@@ -113,6 +121,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         });
     }
     
+    /**
+     * @return iterable<FarahUrl, string>
+     */
     private function getReferencedAssetReferences(): iterable {
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
@@ -194,6 +205,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
     }
     
+    /**
+     * @return array<array-key, array{FarahUrl}>
+     */
     public function assetLocalUrlProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
@@ -214,10 +228,16 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         });
     }
     
+    /**
+     * @return iterable<FarahUrlPath>
+     */
     private function getLocalAssetPaths(): iterable {
         yield from $this->buildPathIndex($this->getManifestAsset());
     }
     
+    /**
+     * @return iterable<FarahUrlPath>
+     */
     private function buildPathIndex(AssetInterface $asset): iterable {
         if ($asset->isImportSelfInstruction()) {
             return;
@@ -353,6 +373,9 @@ abstract class AbstractModuleTest extends AbstractTestCase {
         }
     }
     
+    /**
+     * @return array<array-key, array{string, string}>
+     */
     public function assetLinkProvider(): array {
         $cache = TestCache::instance(get_class($this));
         

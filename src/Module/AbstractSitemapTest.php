@@ -57,9 +57,14 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
     }
     
     protected function getSitesRoot(): DOMElement {
-        return $this->getSitesDocument()->documentElement;
+        $root = $this->getSitesDocument()->documentElement;
+        $this->assertInstanceOf(DOMElement::class, $root);
+        return $root;
     }
     
+    /**
+     * @return array<string, FarahUrl>
+     */
     protected function getSitesIncludes(): array {
         $ret = [];
         $result = $this->getSitesResult();
@@ -70,6 +75,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         return $ret;
     }
     
+    /**
+     * @param array<string, FarahUrl> $ret
+     */
     protected function getSitesIncludesCrawl(array &$ret, FarahUrl $parentUrl, DOMDocument $document): void {
         $nodeList = $document->getElementsByTagNameNS(DOMHelper::NS_FARAH_SITES, Domain::TAG_INCLUDE_PAGES);
         foreach ($nodeList as $node) {
@@ -142,6 +150,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      */
     public function testSitesIsValidAccordingToSchema(DOMDocument $schemaDocument): DOMDocument {
         $document = $this->getSitesDocument();
+        $this->assertNotNull($schemaDocument->documentURI);
         $this->assertSchema($document, $schemaDocument->documentURI);
         return $document;
     }
@@ -166,10 +175,14 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
      */
     public function testIncludeIsValidAccordingToSchema(FarahUrl $url): void {
         $document = Module::resolveToDOMWriter($url)->toDocument();
+        $this->assertInstanceOf(DOMElement::class, $document->documentElement);
         $schema = $this->testSchemaExists($document->documentElement);
         $this->assertSchema($document, $schema);
     }
     
+    /**
+     * @return array<string, array{FarahUrl}>
+     */
     public function includeProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
@@ -211,7 +224,7 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
             return;
         }
         
-        $this->fail('<page> must have either ref or redirect or ext attribute.' . PHP_EOL . $node->ownerDocument->saveXML($node));
+        $this->fail('<page> must have either ref or redirect or ext attribute.' . PHP_EOL . $node->ownerDocument?->saveXML($node));
     }
     
     /**
@@ -331,6 +344,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         Domain::TAG_FILE
     ];
     
+    /**
+     * @return array<array-key, array{DOMElement}>
+     */
     public function pageNodeProvider(): array {
         $cache = TestCache::instance(get_class($this));
         
@@ -349,6 +365,9 @@ abstract class AbstractSitemapTest extends AbstractTestCase {
         });
     }
     
+    /**
+     * @return array<string, array{int|string, string}>
+     */
     public function pageLinkProvider(): array {
         $cache = TestCache::instance(get_class($this));
         

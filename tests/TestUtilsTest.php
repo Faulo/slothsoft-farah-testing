@@ -27,6 +27,7 @@ final class TestUtilsTest extends TestCase {
         $this->assertThat(getcwd(), new IsEqual($expected));
     }
     
+    /** @return iterable<string, array{string}> */
     public function provideDirectories(): iterable {
         yield 'do nothing in root' => [
             __DIR__ . '/..'

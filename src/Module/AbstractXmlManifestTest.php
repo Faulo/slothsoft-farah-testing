@@ -71,6 +71,7 @@ abstract class AbstractXmlManifestTest extends AbstractManifestTest {
      * @depends testSchemaIsValidXml
      */
     public function testManifestIsValidAccordingToSchema(DOMDocument $manifestDocument, DOMDocument $schemaDocument): DOMDocument {
+        $this->assertNotNull($schemaDocument->documentURI);
         $this->assertSchema($manifestDocument, $schemaDocument->documentURI);
         
         return $manifestDocument;

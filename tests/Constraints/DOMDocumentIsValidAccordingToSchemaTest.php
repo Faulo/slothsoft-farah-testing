@@ -20,7 +20,7 @@ final class DOMDocumentIsValidAccordingToSchemaTest extends TestCase {
      * @test
      * @dataProvider provideXml
      */
-    public function test_matches($input, bool $expected): void {
+    public function test_matches(mixed $input, bool $expected): void {
         $sut = new DOMDocumentIsValidAccordingToSchema();
         
         $actual = $sut->evaluate($input, '', true);
@@ -63,6 +63,7 @@ final class DOMDocumentIsValidAccordingToSchemaTest extends TestCase {
         $sut->evaluate('<data xmlns="http://schema.slothsoft.net/farah/module"/>');
     }
     
+    /** @return iterable<string, array{string|\SplFileInfo|FarahUrl, bool}> */
     public static function provideXml(): iterable {
         yield 'invalid xml' => [
             '<data xmlns="http://schema.slothsoft.net/farah/module"/>',

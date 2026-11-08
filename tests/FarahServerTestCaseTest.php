@@ -12,6 +12,7 @@ use PHPUnit\Framework\Constraint\IsIdentical;
  */
 class FarahServerTestCaseTest extends FarahServerTestCase {
     
+    /** @var array<string, FarahServer|\Symfony\Component\Panther\Client> */
     private static array $values = [];
     
     protected static function setUpServer(): void {
@@ -25,18 +26,14 @@ class FarahServerTestCaseTest extends FarahServerTestCase {
     /**
      * @test
      */
-    public function test_setUpServer() {
-        $this->assertNotNull(self::$values['server']);
-        
+    public function test_setUpServer(): void {
         $this->assertThat(self::$values['server'], new IsIdentical(self::$server));
     }
     
     /**
      * @test
      */
-    public function test_setUpClient() {
-        $this->assertNotNull(self::$values['client']);
-        
+    public function test_setUpClient(): void {
         $this->assertThat(self::$values['client'], new IsIdentical($this->client));
     }
 }

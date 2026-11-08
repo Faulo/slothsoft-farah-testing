@@ -28,6 +28,9 @@ class FarahServer {
         return $port;
     }
     
+    /**
+     * @var array<string, string|false>
+     */
     private array $env = [];
     
     private WebServerManager $manager;
@@ -80,11 +83,13 @@ class FarahServer {
         }
     }
     
+    /** @var list<string> */
     private static array $firefoxExecutables = [
         'geckodriver.exe',
         'geckodriver'
     ];
     
+    /** @var list<string> */
     private static array $firefoxArguments = [
         '--headless',
         '--window-size=1200,1100',
@@ -92,11 +97,13 @@ class FarahServer {
         '--new-instance'
     ];
     
+    /** @var list<string> */
     private static array $chromeExecutables = [
         'chromedriver.exe',
         'chromedriver'
     ];
     
+    /** @var list<string> */
     private static array $chromeArguments = [
         '--headless=new',
         '--window-size=1200,1100',

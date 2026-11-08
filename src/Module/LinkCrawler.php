@@ -180,6 +180,9 @@ final class LinkCrawler {
         ]
     ];
     
+    /**
+     * @return iterable<array{string, string, string, bool, bool}>
+     */
     private function getLinkingElements(string $namespace): iterable {
         switch ($namespace) {
             case DOMHelper::NS_HTML:
@@ -201,12 +204,21 @@ final class LinkCrawler {
         yield from self::LINKING_ELEMENTS_XINCLUDE;
     }
     
+    /**
+     * @var Set<mixed>
+     */
     private Set $whitelist;
     
+    /**
+     * @param Set<mixed>|null $whitelist
+     */
     public function __construct(?Set $whitelist = null) {
         $this->whitelist = $whitelist ?? new Set();
     }
     
+    /**
+     * @return iterable<string, string>
+     */
     public function crawlDocument(DOMDocument $document): iterable {
         if ($document->documentElement) {
             $xpath = DOMHelper::loadXPath($document, 0);

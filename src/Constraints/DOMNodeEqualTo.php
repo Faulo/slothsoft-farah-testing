@@ -35,7 +35,7 @@ final class DOMNodeEqualTo extends Constraint {
         return 'is XML-equal to the expected node';
     }
     
-    public function evaluate($other, string $description = '', bool $returnResult = false): bool {
+    public function evaluate(mixed $other, string $description = '', bool $returnResult = false): bool {
         if ($this->expected === $other) {
             return true;
         }
@@ -53,7 +53,7 @@ final class DOMNodeEqualTo extends Constraint {
         $this->fail($other, $description, $this->createComparison($other, $otherText));
     }
     
-    private function createComparison($other, string $otherText): object {
+    private function createComparison(mixed $other, string $otherText): object {
         foreach ([
                      'PHPUnitPHAR\SebastianBergmann\Comparator\ComparisonFailure',
                      'SebastianBergmann\Comparator\ComparisonFailure'
@@ -80,6 +80,9 @@ final class DOMNodeEqualTo extends Constraint {
         return implode("\n", iterator_to_array(self::stringifyIterator($node), false));
     }
     
+    /**
+     * @return iterable<string>
+     */
     private static function stringifyIterator(DOMNode $node, int $depth = 0): iterable {
         switch ($node->nodeType) {
             case XML_DOCUMENT_NODE:

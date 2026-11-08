@@ -24,6 +24,7 @@ class AbstractTestCase extends TestCase {
         $this->fail(sprintf('%s:%s%s%s%s', get_class($e), PHP_EOL, $e->getMessage(), PHP_EOL, $e->getTraceAsString()));
     }
     
+    /** @return mixed */
     protected function getObjectProperty(object $target, string $name) {
         $getProperty = function (string $name) {
             return $this->$name;
@@ -32,7 +33,8 @@ class AbstractTestCase extends TestCase {
         return $getProperty($name);
     }
     
-    protected function getObjectMethod(object $target, string $name, ...$args) {
+    /** @return mixed */
+    protected function getObjectMethod(object $target, string $name, mixed ...$args) {
         $getProperty = function (string $name, $args) {
             return $this->$name(...$args);
         };

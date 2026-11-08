@@ -52,6 +52,9 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(PathResolverStrategyInterface::class, new $className());
     }
     
+    /**
+     * @return array<array-key, array{string}>
+     */
     public function customPathResolverProvider(): array {
         return $this->getAllAttributeValuesProvider(Manifest::ATTR_PATH_RESOLVER);
     }
@@ -65,6 +68,9 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(ExecutableBuilderStrategyInterface::class, new $className());
     }
     
+    /**
+     * @return array<array-key, array{string}>
+     */
     public function customExecutableBuilderProvider(): array {
         return $this->getAllAttributeValuesProvider(Manifest::ATTR_EXECUTABLE_BUILDER);
     }
@@ -78,6 +84,9 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(InstructionStrategyInterface::class, new $className());
     }
     
+    /**
+     * @return array<array-key, array{string}>
+     */
     public function customInstructionProvider(): array {
         return $this->getAllAttributeValuesProvider(Manifest::ATTR_INSTRUCTION);
     }
@@ -91,10 +100,16 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         $this->assertInstanceOf(ParameterFilterStrategyInterface::class, new $className());
     }
     
+    /**
+     * @return array<array-key, array{string}>
+     */
     public function customParameterFilterProvider(): array {
         return $this->getAllAttributeValuesProvider('parameter-filte');
     }
     
+    /**
+     * @return iterable<string>
+     */
     private function getAllAttributeValues(string $attributeName): iterable {
         $manifestDocument = $this->getManifestDocument();
         $nodeList = $manifestDocument->getElementsByTagName('*');
@@ -105,6 +120,9 @@ abstract class AbstractManifestTest extends AbstractTestCase {
         }
     }
     
+    /**
+     * @return array<array-key, array{string}>
+     */
     private function getAllAttributeValuesProvider(string $attributeName): array {
         $cache = TestCache::instance(get_class($this));
         

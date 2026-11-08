@@ -24,6 +24,7 @@ class LinkCrawlerTest extends TestCase {
     
     /**
      * @test
+     * @param array<string, string> $expected
      * @dataProvider provideExamples
      */
     public function test_crawl(string $xml, array $expected): void {
@@ -67,6 +68,7 @@ EOT
         ]));
     }
     
+    /** @return iterable<string, array{string, array<string, string>}> */
     public function provideExamples(): iterable {
         yield 'html a' => [
             <<<EOT

@@ -36,7 +36,7 @@ class FarahServerTest extends TestCase {
     /**
      * @test
      */
-    public function test_start() {
+    public function test_start(): void {
         $sut = new FarahServer();
         $sut->start();
         
@@ -71,9 +71,11 @@ class FarahServerTest extends TestCase {
     /**
      * @test
      */
-    public function test_setModule_isUsedByServer() {
+    public function test_setModule_isUsedByServer(): void {
         $sut = new FarahServer();
-        $sut->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft-testing', 'test'), realpath('test-files/module'));
+        $assetsDirectory = realpath('test-files/module');
+        $this->assertNotFalse($assetsDirectory);
+        $sut->setModule(FarahUrlAuthority::createFromVendorAndModule('slothsoft-testing', 'test'), $assetsDirectory);
         $sut->start();
         
         $actual = file_get_contents($sut->uri . '/slothsoft-testing@test/php-info');
@@ -84,20 +86,21 @@ class FarahServerTest extends TestCase {
     /**
      * @test
      */
-    public function test_setSitemap_isUsedByServer() {
+    public function test_setSitemap_isUsedByServer(): void {
         $sut = new FarahServer();
         $sut->setSitemap(FarahUrl::createFromReference('farah://slothsoft@farah/example-domain'));
         $sut->start();
         
         $actual = DOMHelper::loadDocument($sut->uri . '/sitemap');
         
+        $this->assertNotNull($actual->documentElement);
         $this->assertThat($actual->documentElement->namespaceURI, new IsEqual(DOMHelper::NS_SITEMAP));
     }
     
     /**
      * @test
      */
-    public function test_createClient_andReturn() {
+    public function test_createClient_andReturn(): void {
         $sut = new FarahServer();
         $sut->start();
         
@@ -116,13 +119,14 @@ class FarahServerTest extends TestCase {
     /**
      * @test
      */
-    public function test_createClient_requestFromServer() {
+    public function test_createClient_requestFromServer(): void {
         $sut = new FarahServer();
         $sut->start();
         
         try {
             $source = file_get_contents("$sut->uri/slothsoft@farah/phpinfo");
             
+            $this->assertNotFalse($source);
             $document = new DOMDocument();
             $actual = $document->loadXML($source);
             $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
@@ -138,7 +142,7 @@ class FarahServerTest extends TestCase {
     /**
      * @test
      */
-    public function test_createClient_requestFromClient() {
+    public function test_createClient_requestFromClient(): void {
         $sut = new FarahServer();
         $sut->start();
         
@@ -147,7 +151,6 @@ class FarahServerTest extends TestCase {
             $client->request('GET', '/slothsoft@farah/phpinfo');
             $source = $client->getPageSource();
             $sut->returnClientQuietly($client);
-            
             $document = new DOMDocument();
             $actual = $document->loadXML($source);
             $this->assertTrue($actual, "Failed to retrieve /slothsoft@farah/phpinfo:" . PHP_EOL . $source);
@@ -163,7 +166,7 @@ class FarahServerTest extends TestCase {
     /**
      * @test
      */
-    public function test_createClient_executeScript() {
+    public function test_createClient_executeScript(): void {
         $sut = new FarahServer();
         $sut->start();
         

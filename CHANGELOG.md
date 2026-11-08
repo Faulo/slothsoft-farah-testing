@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Complete type annotations for constraints, test helpers, and data providers; report missing XML roots and schema URIs as assertion failures.
+- Handle unresolved working directories while locating the Composer root.
+
 ## [1.3.14] - 2026-10-25
 
 ### Added

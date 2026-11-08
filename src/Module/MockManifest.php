@@ -15,11 +15,11 @@ class MockManifest implements ManifestInterface {
     public function normalizeManifestElement(LeanElement $parent, LeanElement $child): void {
     }
     
-    public function createUrl($path = null, $args = null, $fragment = null): FarahUrl {
+    public function createUrl(mixed $path = null, mixed $args = null, mixed $fragment = null): FarahUrl {
         throw new BadMethodCallException();
     }
     
-    public function lookupAsset($path): AssetInterface {
+    public function lookupAsset(mixed $path): AssetInterface {
         throw new BadMethodCallException();
     }
     
@@ -41,11 +41,11 @@ class MockManifest implements ManifestInterface {
         throw new BadMethodCallException();
     }
     
-    public function createCacheFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
+    public function createCacheFile(string $fileName, mixed $path = null, mixed $args = null, mixed $fragment = null): SplFileInfo {
         throw new BadMethodCallException();
     }
     
-    public function createDataFile(string $fileName, $path = null, $args = null, $fragment = null): SplFileInfo {
+    public function createDataFile(string $fileName, mixed $path = null, mixed $args = null, mixed $fragment = null): SplFileInfo {
         throw new BadMethodCallException();
     }
 }

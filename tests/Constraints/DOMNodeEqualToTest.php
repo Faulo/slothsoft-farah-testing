@@ -29,6 +29,7 @@ final class DOMNodeEqualToTest extends TestCase {
         self::assertThat($actual, new IsEqual($expected));
     }
     
+    /** @return iterable<string, array{string, string}> */
     public static function provideStringifiedXml(): iterable {
         yield 'simple element' => [
             '<data a="b"><child c="d"/></data>',
@@ -123,7 +124,7 @@ EOT
     /**
      * @test
      */
-    public function test_diff() {
+    public function test_diff(): void {
         $dom = new DOMHelper();
         $this->assertThat($dom->parse('<data/>'), new DOMNodeEqualTo($dom->parse('<data/>')));
     }
@@ -140,6 +141,7 @@ EOT
         $this->assertFalse($actual);
     }
     
+    /** @return iterable<string, array{string, string, 2?: string}> */
     public static function provideXmlComparisons(): iterable {
         yield 'identical simple element' => [
             '<data a="b"/>',
